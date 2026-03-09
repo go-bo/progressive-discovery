@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import styled from '@emotion/styled';
 import { StyledTheme, usePebbleTheme } from '@/utils/theme';
 import Icon from '@rippling/pebble/Icon';
 import Button from '@rippling/pebble/Button';
 import Avatar from '@rippling/pebble/Avatar';
 import TableBasic from '@rippling/pebble/TableBasic';
-import { DiscoveryPageLayout, PageHeroBanner, FeatureCardGrid } from '@/spec';
-import type { FeatureCardGridItem } from '@/spec';
+import { DiscoveryPageLayout, PlatformPrimer } from '@/spec';
+import type { FeatureCardDetailConfig } from '@/spec';
 
 // ── Layout ──────────────────────────────────────────────
 
@@ -415,29 +415,163 @@ const OFFBOARDING_REASONS = [
   { reason: 'Termination', count: 8 },
 ];
 
-const ORG_STRUCTURE_POWER_ITEMS: FeatureCardGridItem[] = [
-  {
-    id: 'permissions',
-    icon: Icon.TYPES.SHIELD_FILLED,
-    title: 'Permissions',
-    description: 'Uses team membership to assign app access automatically. Control who sees what across Rippling.',
-    primaryAction: { label: 'Manage permissions', onClick: () => {} },
+
+// ── Tab Primers ──────────────────────────────────────
+
+interface TabPrimerConfig {
+  title: string;
+  subtitle: string;
+  cta: string;
+  features: FeatureCardDetailConfig[];
+  separatorLabel: string;
+}
+
+const TAB_PRIMERS: Record<number, TabPrimerConfig> = {
+  0: {
+    title: 'Your company\'s foundation in Rippling',
+    subtitle: 'Company information, legal entities, and work locations. This data powers payroll, compliance, and employee records across every module.',
+    cta: 'Open company information',
+    separatorLabel: 'What\'s managed here',
+    features: [
+      {
+        icon: Icon.TYPES.OFFICE_OUTLINE,
+        title: 'Company details',
+        description: 'Legal name, EIN, industry, and company size.',
+        benefits: ['Feeds into tax filings', 'Required for compliance reporting', 'Used across all modules'],
+        ctaLabel: 'View company details',
+      },
+      {
+        icon: Icon.TYPES.LOCATION_OUTLINE,
+        title: 'Work locations',
+        description: 'Physical offices and remote work settings.',
+        benefits: ['Powers tax jurisdiction calculations', 'Drives location-based policies', 'Feeds into compliance'],
+        ctaLabel: 'View locations',
+      },
+      {
+        icon: Icon.TYPES.EMAIL_OUTLINE,
+        title: 'Email domains',
+        description: 'Verified domains for employee work emails.',
+        benefits: ['Used for provisioning', 'SSO and security settings', 'Email routing'],
+        ctaLabel: 'View domains',
+      },
+      {
+        icon: Icon.TYPES.HIERARCHY_HORIZONTAL_OUTLINE,
+        title: 'Legal entities',
+        description: 'Subsidiaries and legal structures across countries.',
+        benefits: ['Required for global payroll', 'Drives entity-specific compliance', 'Supports multi-entity reporting'],
+        ctaLabel: 'View entities',
+      },
+    ],
   },
-  {
-    id: 'policies',
-    icon: Icon.TYPES.CUSTOMIZE_POLICY_FILLED,
-    title: 'Policies',
-    description: 'Routes schedules, time-off rules, and decisions based on team and department ownership.',
-    primaryAction: { label: 'Set up policies', onClick: () => {} },
+  1: {
+    title: 'Map your reporting lines and team structure',
+    subtitle: 'Departments, teams, and reporting lines stay in sync across permissions, policies, and workflows — set it up once.',
+    cta: 'Get started',
+    separatorLabel: 'Org structure powers',
+    features: [
+      {
+        icon: Icon.TYPES.DEPARTMENTS_OUTLINE,
+        title: 'Departments & teams',
+        description: 'Org units that drive policy assignment and access.',
+        benefits: ['Auto-assign policies by department', 'Drive headcount reporting', 'Structure compensation reviews'],
+        ctaLabel: 'View departments',
+      },
+      {
+        icon: Icon.TYPES.SHIELD_FILLED,
+        title: 'Permissions',
+        description: 'Team membership determines who sees what.',
+        benefits: ['Auto-assign app access', 'Role-based visibility', 'Inherited from org structure'],
+        ctaLabel: 'View permissions',
+      },
+      {
+        icon: Icon.TYPES.CUSTOMIZE_POLICY_FILLED,
+        title: 'Policies',
+        description: 'Routes schedules and rules based on team ownership.',
+        benefits: ['Department-based policy routing', 'Team-specific schedules', 'Location-aware rules'],
+        ctaLabel: 'View policies',
+      },
+      {
+        icon: Icon.TYPES.REPORT_CHECKLIST_FILLED,
+        title: 'Workflows',
+        description: 'Automates approvals based on reporting structure.',
+        benefits: ['Manager-based approval chains', 'Department routing', 'Cross-team escalation'],
+        ctaLabel: 'View workflows',
+      },
+    ],
   },
-  {
-    id: 'workflows',
-    icon: Icon.TYPES.REPORT_CHECKLIST_FILLED,
-    title: 'Workflows',
-    description: 'Automates approvals and routing based on reporting structure. Add employees to teams to unlock.',
-    primaryAction: { label: 'Configure workflows', onClick: () => {} },
+  2: {
+    title: 'Standardize roles, levels, and compensation bands',
+    subtitle: 'Define job titles, career levels, and salary bands that apply consistently across departments. This data feeds into offer letters, reviews, and comp reporting.',
+    cta: 'Open job information',
+    separatorLabel: 'What you can define',
+    features: [
+      {
+        icon: Icon.TYPES.BRIEFCASE_OUTLINE,
+        title: 'Job titles',
+        description: 'Standard titles by department with salary bands.',
+        benefits: ['Consistent across offer letters', 'Feeds into compensation reports', 'Used for benchmarking'],
+        ctaLabel: 'View job titles',
+      },
+      {
+        icon: Icon.TYPES.BAR_CHART_OUTLINE,
+        title: 'Job levels',
+        description: 'Career progression framework from IC to Staff+.',
+        benefits: ['Defines career ladders', 'Structures compensation bands', 'Drives promotion workflows'],
+        ctaLabel: 'View job levels',
+      },
+      {
+        icon: Icon.TYPES.DEPARTMENTS_OUTLINE,
+        title: 'Department mapping',
+        description: 'Link titles and levels to specific departments.',
+        benefits: ['Department-specific titles', 'Org-wide consistency', 'Headcount planning'],
+        ctaLabel: 'View mapping',
+      },
+      {
+        icon: Icon.TYPES.SHARE_OUTLINE,
+        title: 'Compensation bands',
+        description: 'Salary ranges tied to levels and roles.',
+        benefits: ['Pay equity analysis', 'Offer letter defaults', 'Budget planning inputs'],
+        ctaLabel: 'View bands',
+      },
+    ],
   },
-];
+  3: {
+    title: 'Configure how employees move through your company',
+    subtitle: 'Define employee statuses, onboarding stages, and offboarding reasons. These settings shape what happens when someone joins, changes roles, or leaves.',
+    cta: 'Open employee lifecycle',
+    separatorLabel: 'What you can configure',
+    features: [
+      {
+        icon: Icon.TYPES.CHECK_CIRCLE_OUTLINE,
+        title: 'Employee statuses',
+        description: 'Active, on leave, terminated — with headcount tracking.',
+        benefits: ['Drives payroll eligibility', 'Controls system access', 'Powers headcount reports'],
+        ctaLabel: 'View statuses',
+      },
+      {
+        icon: Icon.TYPES.PROVISION_USERS_ONBOARD_OUTLINE,
+        title: 'Onboarding stages',
+        description: 'Pre-boarding through month 1 task checklists.',
+        benefits: ['Automated task assignment', 'Completion tracking', 'New hire experience'],
+        ctaLabel: 'View stages',
+      },
+      {
+        icon: Icon.TYPES.PROVISION_USERS_OFFBOARD_OUTLINE,
+        title: 'Offboarding reasons',
+        description: 'Separation codes for compliance and reporting.',
+        benefits: ['Required for unemployment filings', 'Attrition analytics', 'Exit interview routing'],
+        ctaLabel: 'View reasons',
+      },
+      {
+        icon: Icon.TYPES.HIERARCHY_HORIZONTAL_OUTLINE,
+        title: 'Lifecycle transitions',
+        description: 'What triggers when status changes happen.',
+        benefits: ['Automatic access revocation', 'Document collection', 'Workflow triggers'],
+        ctaLabel: 'View transitions',
+      },
+    ],
+  },
+};
 
 // ── Component ────────────────────────────────────────
 
@@ -448,6 +582,35 @@ export interface OrganizationalDataPageProps {
 
 export const OrganizationalDataPage: React.FC<OrganizationalDataPageProps> = ({ activeTabIndex = 0 }) => {
   const { theme } = usePebbleTheme();
+  const [dismissedTabs, setDismissedTabs] = useState<Set<number>>(new Set());
+
+  const dismissTab = useCallback((tabIndex: number) => {
+    setDismissedTabs(prev => new Set([...prev, tabIndex]));
+  }, []);
+
+  const primerConfig = TAB_PRIMERS[activeTabIndex];
+  const showPrimer = primerConfig && !dismissedTabs.has(activeTabIndex);
+
+  if (showPrimer) {
+    return (
+      <PlatformPrimer
+        hero={{
+          title: primerConfig.title,
+          subtitle: primerConfig.subtitle,
+          primaryAction: { label: primerConfig.cta, onClick: () => dismissTab(activeTabIndex) },
+          layout: 'stacked',
+          titleSize: 'title',
+        }}
+        discoverySlotVariant="capability"
+        discoverySlotCapability={{
+          separatorLabel: primerConfig.separatorLabel,
+          features: primerConfig.features,
+          onCta: () => dismissTab(activeTabIndex),
+        }}
+        size="md"
+      />
+    );
+  }
 
   return (
     <PageContainer theme={theme} size="md">
@@ -619,22 +782,26 @@ export const OrganizationalDataPage: React.FC<OrganizationalDataPageProps> = ({ 
 
       {activeTabIndex === 1 && (
         <>
-          <PageHeroBanner
-            layout="side-by-side"
-            titleSize="title"
-            title="Set up org structure"
-            subtitle="Map departments, teams, and reporting lines to keep your org chart in sync across all your tools."
-            primaryAction={{ label: 'Get started', onClick: () => {} }}
-            secondaryText="Takes about 5 minutes"
-            visual={<OrgChartPlaceholder theme={theme} />}
-            visualMaxWidth={576}
-          />
-          <FeatureCardGrid
-            category="Departments power more than your org chart"
-            categorySubtitle="Org data unlocks policies, permissions, workflows, integrations, and more across Rippling."
-            iconVariant="accent"
-            items={ORG_STRUCTURE_POWER_ITEMS}
-          />
+          {/* Org Structure data view — placeholder for when primer is dismissed */}
+          <SectionCard theme={theme}>
+            <SectionHeader theme={theme}>
+              <SectionHeaderLeft>
+                <SectionTitle theme={theme}>Departments</SectionTitle>
+                <SectionSubtitle theme={theme}>Organizational units and team structure</SectionSubtitle>
+              </SectionHeaderLeft>
+              <Button
+                appearance={Button.APPEARANCES.OUTLINE}
+                size={Button.SIZES.S}
+                icon={Icon.TYPES.ADD}
+                onClick={() => {}}
+              >
+                Add Department
+              </Button>
+            </SectionHeader>
+            <SectionContent theme={theme}>
+              <OrgChartPlaceholder theme={theme} />
+            </SectionContent>
+          </SectionCard>
         </>
       )}
 
