@@ -21,6 +21,8 @@ export { DiscoverySlotCapability } from './components/PlatformPrimer/DiscoverySl
 export { DiscoverySlotUnlock } from './components/PlatformPrimer/DiscoverySlotUnlock';
 export { DiscoverySlotSecondary } from './components/PlatformPrimer/DiscoverySlotSecondary';
 export type { SecondaryDiscoveryItem } from './components/PlatformPrimer/DiscoverySlotSecondary';
+export { PrimerCompactModule } from './components/PlatformPrimer/PrimerCompactModule';
+export type { PrimerCompactModuleProps } from './components/PlatformPrimer/PrimerCompactModule';
 
 // Patterns
 export {

@@ -55,6 +55,7 @@ const PlatformPrimerDemo: React.FC = () => {
     page && PLATFORM_PRIMER_PAGES.has(page) ? page : DEFAULT_PAGE,
   );
   const [organizationalDataTabIndex, setOrganizationalDataTabIndex] = useState(0);
+  const [reportsTabIndex, setReportsTabIndex] = useState(0);
   const { lifecyclePhase, setLifecyclePhase } = useUserState();
 
   useEffect(() => {
@@ -126,10 +127,18 @@ const PlatformPrimerDemo: React.FC = () => {
         showPageHeader && getPageTabs(activePage)
           ? activePage === 'organizational-data'
             ? organizationalDataTabIndex
-            : 0
+            : activePage === 'reports'
+              ? reportsTabIndex
+              : 0
           : undefined
       }
-      onTabChange={activePage === 'organizational-data' ? setOrganizationalDataTabIndex : undefined}
+      onTabChange={
+        activePage === 'organizational-data'
+          ? setOrganizationalDataTabIndex
+          : activePage === 'reports'
+            ? setReportsTabIndex
+            : undefined
+      }
       pageBreadcrumbs={
         showBreadcrumbs ? (
           <Breadcrumb
@@ -168,7 +177,13 @@ const PlatformPrimerDemo: React.FC = () => {
       {activePage === 'platform-overview' && <PlatformOverviewPage />}
       {activePage === 'app-shop' && <ExplorePage />}
       {activePage === 'data-overview' && <DataOverviewPage onNavigate={setActivePage} />}
-      {isPrimerPage && <PlatformPrimerPage pageId={activePage} onNavigate={setActivePage} />}
+      {isPrimerPage && (
+        <PlatformPrimerPage
+          pageId={activePage}
+          onNavigate={setActivePage}
+          activeTabIndex={activePage === 'reports' ? reportsTabIndex : undefined}
+        />
+      )}
       {activePage === 'tools-overview' && <ToolsOverviewPage onNavigate={setActivePage} />}
       {activePage === 'company-settings-overview' && (
         <CompanySettingsOverviewPage onNavigate={setActivePage} />

@@ -190,30 +190,79 @@ const FunnelStack = styled.div`
   width: 100%;
 `;
 
-// ── Reports — run frequency + viewer patterns ────────────
+// ── Reports — featured recipe visual ─────────────────────
 
-const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
-const REPORT_BARS = [35, 55, 90, 70, 45];
+const FEATURED_RECIPES = [
+  { icon: Icon.TYPES.USERS_OUTLINE, title: 'Headcount by department', description: 'Current employee count by department and location.' },
+  { icon: Icon.TYPES.LEAVE_MANAGEMENT_OUTLINED, title: 'Time off balances', description: 'Accrued, used, and remaining PTO.' },
+  { icon: Icon.TYPES.DOLLAR_CIRCLE_OUTLINE, title: 'Payroll summary', description: 'Total payroll costs with tax breakdowns.' },
+  { icon: Icon.TYPES.HEART_OUTLINE, title: 'Benefits enrollment', description: 'Enrollment rates and plan distribution.' },
+  { icon: Icon.TYPES.CREDIT_CARD_OUTLINE, title: 'Spend by category', description: 'Expense totals by category and period.' },
+  { icon: Icon.TYPES.LAPTOP_OUTLINE, title: 'IT asset inventory', description: 'Devices by type, status, and owner.' },
+];
+
+const RecipeVisualRow = styled.div`
+  display: flex;
+  align-items: flex-start;
+  gap: ${({ theme }) => (theme as StyledTheme).space200};
+  padding: ${({ theme }) => (theme as StyledTheme).space200} ${({ theme }) => (theme as StyledTheme).space300};
+  background: ${({ theme }) => (theme as StyledTheme).colorSurfaceContainerLow};
+  border-radius: ${({ theme }) => (theme as StyledTheme).shapeCornerLg};
+`;
+
+const RecipeVisualIcon = styled.div`
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: ${({ theme }) => (theme as StyledTheme).shapeCornerMd};
+  background: ${({ theme }) => (theme as StyledTheme).colorSurfaceBright};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const RecipeVisualText = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+`;
+
+const RecipeVisualTitle = styled.span`
+  ${({ theme }) => (theme as StyledTheme).typestyleV2LabelMedium};
+  color: ${({ theme }) => (theme as StyledTheme).colorOnSurface};
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+const RecipeVisualDesc = styled.span`
+  ${({ theme }) => (theme as StyledTheme).typestyleV2BodySmall};
+  color: ${({ theme }) => (theme as StyledTheme).colorOnSurfaceVariant};
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.3;
+`;
 
 export const ReportsVisual: React.FC<{ theme: StyledTheme }> = ({ theme }) => (
   <VisualWrapper theme={theme}>
     <VisualFrame theme={theme}>
-      <CategoryLabel theme={theme}>Report runs this week</CategoryLabel>
-      <Narrative theme={theme}>Finance ran 3× more reports than any other team</Narrative>
-      <BarRow theme={theme}>
-        {REPORT_BARS.map((h, i) => (
-          <Bar key={i} theme={theme} $h={h} $accent={i === 2} />
+      <VisualList theme={theme}>
+        {FEATURED_RECIPES.map((r) => (
+          <RecipeVisualRow key={r.title} theme={theme}>
+            <RecipeVisualIcon theme={theme}>
+              <Icon type={r.icon} size={13} />
+            </RecipeVisualIcon>
+            <RecipeVisualText theme={theme}>
+              <RecipeVisualTitle theme={theme}>{r.title}</RecipeVisualTitle>
+              <RecipeVisualDesc theme={theme}>{r.description}</RecipeVisualDesc>
+            </RecipeVisualText>
+          </RecipeVisualRow>
         ))}
-      </BarRow>
-      <BarLabels>
-        {DAYS.map(d => <BarLabel key={d} theme={theme}>{d}</BarLabel>)}
-      </BarLabels>
-      <StatRow theme={theme}>
-        <Stat><StatValue theme={theme}>47</StatValue><StatLabel theme={theme}>runs this week</StatLabel></Stat>
-        <Stat><StatValue theme={theme}>12</StatValue><StatLabel theme={theme}>unique viewers</StatLabel></Stat>
-      </StatRow>
+      </VisualList>
     </VisualFrame>
-    <VisualLabel theme={theme}>Report activity</VisualLabel>
+    <VisualLabel theme={theme}>Report templates</VisualLabel>
   </VisualWrapper>
 );
 
@@ -310,6 +359,7 @@ export const DataPipelinesVisual: React.FC<{ theme: StyledTheme }> = ({ theme })
 
 // ── Approvals — request velocity + resolution ────────────
 
+const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
 const APPROVAL_BARS = [40, 65, 80, 55, 30];
 
 export const ApprovalsVisual: React.FC<{ theme: StyledTheme }> = ({ theme }) => (

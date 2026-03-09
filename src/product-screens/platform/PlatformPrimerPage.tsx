@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import styled from '@emotion/styled';
 import Icon from '@rippling/pebble/Icon';
 import { StyledTheme, usePebbleTheme } from '@/utils/theme';
-import { PlatformPrimer } from '@/spec';
+import { PlatformPrimer, PrimerCompactModule } from '@/spec';
 import { useUserState } from '@/framework/user-model';
 import { PLATFORM_PAGES } from './platformPages';
 import {
@@ -69,9 +69,10 @@ const VISUAL_COMPONENTS: Record<string, React.FC<{ theme: any }>> = {
 export interface PlatformPrimerPageProps {
   pageId: string;
   onNavigate?: (page: string) => void;
+  activeTabIndex?: number;
 }
 
-export const PlatformPrimerPage: React.FC<PlatformPrimerPageProps> = ({ pageId, onNavigate }) => {
+export const PlatformPrimerPage: React.FC<PlatformPrimerPageProps> = ({ pageId, onNavigate, activeTabIndex }) => {
   const { theme } = usePebbleTheme();
   const { discoverySlotVariant, purchasedProducts } = useUserState();
 
@@ -87,6 +88,38 @@ export const PlatformPrimerPage: React.FC<PlatformPrimerPageProps> = ({ pageId, 
       r => !r.requiredSku || purchasedProducts.includes(r.requiredSku as any),
     );
   }, [config.template, purchasedProducts]);
+
+  // Compact module for non-primary tabs (e.g., reports "All reports")
+  const showCompact = activeTabIndex !== undefined && activeTabIndex > 0;
+  if (showCompact) {
+    const compactRecipes = filteredRecipes.slice(0, 3).map(r => ({
+      icon: r.icon,
+      title: r.title,
+      description: r.description,
+    }));
+
+    const compactTips = config.capability?.features.slice(0, 3).map(f => ({
+      text: `${f.title} — ${f.description.replace(/\.$/, '').toLowerCase()}`,
+    }));
+
+    return (
+      <div style={{ padding: `${theme.space600} 0` }}>
+        <PrimerCompactModule
+          statusLabel={`${filteredRecipes.length} report templates available`}
+          statusIcon={Icon.TYPES.BAR_CHART_OUTLINE}
+          title="Build dashboards and scheduled reports from any Rippling data."
+          subtitle="Filter, join, and export with confidence."
+          cta="Start using reports"
+          onCtaClick={() => onNavigate?.(pageId)}
+          templateLabel={config.template ? 'Start with a template' : undefined}
+          recipes={compactRecipes}
+          maxRecipes={3}
+          tipsLabel={config.capability ? 'How reports power your workflow' : undefined}
+          tips={compactTips}
+        />
+      </div>
+    );
+  }
 
   const pageInfo = PLATFORM_PAGES[pageId];
   const eyebrow = config.fullPage && pageInfo ? (
