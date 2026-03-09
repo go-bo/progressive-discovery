@@ -9,6 +9,18 @@ export { PageHeroBanner } from './components/PageHeroBanner/PageHeroBanner';
 export type { PageHeroBannerProps } from './components/PageHeroBanner/PageHeroBanner';
 export { CapabilityItem } from './components/CapabilityItem/CapabilityItem';
 export type { CapabilityItemProps } from './components/CapabilityItem/CapabilityItem';
+export { PlatformPrimer } from './components/PlatformPrimer/PlatformPrimer';
+export type {
+  PlatformPrimerProps,
+  PlatformPrimerHeroProps,
+  DiscoverySlotVariant,
+} from './components/PlatformPrimer/PlatformPrimer';
+export { DiscoverySlotTemplate } from './components/PlatformPrimer/DiscoverySlotTemplate';
+export type { TemplateRecipe } from './components/PlatformPrimer/DiscoverySlotTemplate';
+export { DiscoverySlotCapability } from './components/PlatformPrimer/DiscoverySlotCapability';
+export { DiscoverySlotUnlock } from './components/PlatformPrimer/DiscoverySlotUnlock';
+export { DiscoverySlotSecondary } from './components/PlatformPrimer/DiscoverySlotSecondary';
+export type { SecondaryDiscoveryItem } from './components/PlatformPrimer/DiscoverySlotSecondary';
 
 // Patterns
 export {

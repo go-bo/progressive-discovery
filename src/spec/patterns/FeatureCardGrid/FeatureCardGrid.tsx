@@ -31,7 +31,6 @@ const GridSectionHeader = styled.div`
   flex-direction: column;
   gap: ${({ theme }) => (theme as StyledTheme).space100};
   margin-top: ${({ theme }) => (theme as StyledTheme).space200};
-  margin-bottom: ${({ theme }) => (theme as StyledTheme).space400};
 `;
 
 const GridCategoryLabel = styled.h3`

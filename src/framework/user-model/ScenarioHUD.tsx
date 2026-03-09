@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import styled from '@emotion/styled';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { StyledTheme, usePebbleTheme } from '@/utils/theme';
 import Icon from '@rippling/pebble/Icon';
 import { useUserState } from './UserContext';
-import type { LifecyclePhase, UserRole, ProductId } from './types';
+import type { LifecyclePhase, UserRole, ProductId, DiscoverySlotVariant } from './types';
 
 const HUD_WIDTH = 320;
 
@@ -128,22 +127,36 @@ const PRODUCT_OPTIONS: { value: ProductId; label: string }[] = [
   { value: 'it', label: 'IT' },
 ];
 
-const PRODUCT_VIEW_OPTIONS: { value: ProductId | 'home'; label: string; route: string }[] = [
+const PRODUCT_VIEW_OPTIONS: { value: ProductId | 'home' | 'platform-primer'; label: string; route: string }[] = [
   { value: 'home', label: 'Home', route: '/' },
   { value: 'time', label: 'Time', route: '/time' },
   { value: 'spend', label: 'Spend', route: '/spend' },
+  { value: 'platform-primer', label: 'Platform Primer', route: '/platform-primer' },
 ];
 
-function useCurrentProductView(): ProductId | 'home' | null {
+const DISCOVERY_ROW_OPTIONS: { value: DiscoverySlotVariant | null; label: string }[] = [
+  { value: null, label: 'Page Default' },
+  { value: 'unlock', label: 'Unlock' },
+  { value: 'template', label: 'Template' },
+  { value: 'capability', label: 'Capability' },
+];
+
+function useCurrentProductView(): ProductId | 'home' | 'platform-primer' | null {
   const { pathname } = useLocation();
-  const match = PRODUCT_VIEW_OPTIONS.find(opt => opt.route === pathname);
+  const match = PRODUCT_VIEW_OPTIONS.find(
+    opt => opt.route === pathname || (opt.route !== '/' && pathname.startsWith(opt.route + '/'))
+  );
   return match?.value ?? null;
+}
+
+function useIsPlatformPrimer(): boolean {
+  const { pathname } = useLocation();
+  return pathname.startsWith('/platform-primer');
 }
 
 const HIDE_DURATION_MS = 60_000;
 
 export const ScenarioHUD: React.FC = () => {
-  const { theme } = usePebbleTheme();
   const navigate = useNavigate();
   const currentView = useCurrentProductView();
   const [isOpen, setIsOpen] = useState(false);
@@ -152,14 +165,18 @@ export const ScenarioHUD: React.FC = () => {
     lifecyclePhase,
     userRole,
     purchasedProducts,
+    discoverySlotVariant,
     setLifecyclePhase,
     setUserRole,
     setActiveProduct,
     togglePurchasedProduct,
+    setDiscoverySlotVariant,
     resetToDefaults,
   } = useUserState();
 
-  const handleProductViewChange = (value: ProductId | 'home', route: string) => {
+  const isPlatformPrimer = useIsPlatformPrimer();
+
+  const handleProductViewChange = (value: ProductId | 'home' | 'platform-primer', route: string) => {
     setActiveProduct(value);
     navigate(route);
   };
@@ -180,7 +197,14 @@ export const ScenarioHUD: React.FC = () => {
   return (
     <HUDContainer isOpen={isOpen}>
       <HUDHeader onClick={() => setIsOpen(!isOpen)}>
-        <span>Scenario Controls</span>
+        <span>
+          Scenario Controls
+          {typeof window !== 'undefined' && window.location.port && (
+            <span style={{ marginLeft: 8, fontWeight: 400, opacity: 0.7 }}>
+              · :{window.location.port}
+            </span>
+          )}
+        </span>
         <Icon
           type={isOpen ? Icon.TYPES.CHEVRON_DOWN : Icon.TYPES.CHEVRON_UP}
           size={14}
@@ -247,6 +271,23 @@ export const ScenarioHUD: React.FC = () => {
             ))}
           </OptionRow>
         </HUDSection>
+
+        {isPlatformPrimer && (
+          <HUDSection>
+            <HUDLabel>Discovery Row</HUDLabel>
+            <OptionRow>
+              {DISCOVERY_ROW_OPTIONS.map(opt => (
+                <OptionChip
+                  key={opt.value ?? 'default'}
+                  isSelected={discoverySlotVariant === opt.value}
+                  onClick={() => setDiscoverySlotVariant(opt.value)}
+                >
+                  {opt.label}
+                </OptionChip>
+              ))}
+            </OptionRow>
+          </HUDSection>
+        )}
 
         <HUDFooter>
           <FooterLink onClick={resetToDefaults}>Reset defaults</FooterLink>

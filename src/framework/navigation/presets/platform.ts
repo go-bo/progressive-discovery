@@ -4,7 +4,7 @@ import type { NavSectionData, SubmenuGroupData } from '../types';
 // Map: section id -> page ids that belong to it (overview + children). Used to set parent nav active when on a child page.
 const PLATFORM_SECTION_PAGES: Record<string, string[]> = {
   'data': ['data-overview', 'reports', 'data-catalog', 'data-permissions', 'data-pipelines', 'data-transformations'],
-  'tools': ['tools-overview', 'app-studio', 'approvals', 'chat', 'developer', 'documents', 'inbox', 'notification-center', 'recipes', 'workflow-studio'],
+  'tools': ['tools-overview', 'activity-log', 'app-studio', 'approvals', 'chat', 'developer', 'documents', 'inbox', 'notification-center', 'recipes', 'workflow-studio', 'sandbox'],
   'company-settings': ['company-settings-overview', 'flow-configuration', 'organizational-data', 'permissions', 'saved-supergroups', 'security', 'billing', 'branding', 'company-info', 'departments', 'notifications', 'teams', 'work-locations'],
 };
 
@@ -35,6 +35,7 @@ function dataSubmenuGroups(onNavigate: (page: string) => void): SubmenuGroupData
 function toolsSubmenuGroups(onNavigate: (page: string) => void): SubmenuGroupData[] {
   return [{
     items: [
+      { id: 'activity-log', label: 'Activity Log', icon: Icon.TYPES.AUDIT_OBSERVATION_OUTLINE, onClick: () => onNavigate('activity-log') },
       { id: 'app-studio', label: 'App Studio', icon: Icon.TYPES.CUSTOM_APPS_OUTLINE, onClick: () => onNavigate('app-studio') },
       { id: 'approvals', label: 'Approvals', icon: Icon.TYPES.CHECKBOX_WITHCHECK_OUTLINE, onClick: () => onNavigate('approvals') },
       { id: 'chat', label: 'Chat', icon: Icon.TYPES.MESSAGE_OUTLINE, onClick: () => onNavigate('chat') },
@@ -44,6 +45,7 @@ function toolsSubmenuGroups(onNavigate: (page: string) => void): SubmenuGroupDat
       { id: 'notification-center', label: 'Notification Center', icon: Icon.TYPES.NOTIFICATION_OUTLINE, onClick: () => onNavigate('notification-center') },
       { id: 'recipes', label: 'Recipes', icon: Icon.TYPES.RECIPES_OUTLINE, onClick: () => onNavigate('recipes') },
       { id: 'workflow-studio', label: 'Workflow Studio', icon: Icon.TYPES.THUNDERBOLT_OUTLINE, onClick: () => onNavigate('workflow-studio') },
+      { id: 'sandbox', label: 'Sandbox', icon: Icon.TYPES.SANDBOX_OUTLINE, onClick: () => onNavigate('sandbox') },
     ],
   }];
 }
@@ -55,7 +57,7 @@ function companySettingsSubmenuGroups(onNavigate: (page: string) => void): Subme
       { id: 'flow-configuration', label: 'Flow Configuration', icon: Icon.TYPES.FILTER, onClick: () => onNavigate('flow-configuration') },
       { id: 'organizational-data', label: 'Organizational Data', icon: Icon.TYPES.TABLE_COLUMN_OUTLINE, onClick: () => onNavigate('organizational-data') },
       { id: 'permissions', label: 'Permissions', icon: Icon.TYPES.KEY, onClick: () => onNavigate('permissions') },
-      { id: 'saved-supergroups', label: 'Saved Supergroups', icon: Icon.TYPES.REFRESH_OUTLINE, onClick: () => onNavigate('saved-supergroups') },
+      { id: 'saved-supergroups', label: 'Saved Supergroups', icon: Icon.TYPES.USER_GROUP_CHECKED_OUTLINE, onClick: () => onNavigate('saved-supergroups') },
       { id: 'security', label: 'Security', icon: Icon.TYPES.LOCK_OUTLINE, onClick: () => onNavigate('security') },
     ],
   }];

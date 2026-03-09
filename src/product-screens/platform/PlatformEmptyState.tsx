@@ -34,6 +34,8 @@ const PAGE_CATEGORY: Record<string, { label: string; page: string }> = {
   'notification-center': { label: 'Tools', page: 'tools-overview' },
   'recipes': { label: 'Tools', page: 'tools-overview' },
   'workflow-studio': { label: 'Tools', page: 'tools-overview' },
+  'sandbox': { label: 'Tools', page: 'tools-overview' },
+  'activity-log': { label: 'Tools', page: 'tools-overview' },
   'billing': { label: 'Company Settings', page: 'company-settings-overview' },
   'branding': { label: 'Company Settings', page: 'company-settings-overview' },
   'company-info': { label: 'Company Settings', page: 'company-settings-overview' },
@@ -54,21 +56,24 @@ export function getPageMeta(pageId: string) {
 
 // Page tabs (from IA map) - tabs shown in the page header for pages that have them
 const PAGE_TABS: Record<string, string[]> = {
-  'reports': ['All reports', 'My reports', 'Templates'],
+  'reports': ['Recent', 'All reports', 'My reports', 'Shared with me', 'Report permissions'],
   'data-catalog': ['All objects', 'Custom objects'],
   'data-pipelines': ['Pipelines', 'Sync history'],
   'documents': ['People', 'Templates', 'Rules', 'Bulk upload'],
-  'developer': ['API keys', 'Webhooks', 'Event log'],
-  'approvals': ['Pending', 'Approved', 'All'],
-  'inbox': ['All', 'Unread', 'Action required'],
+  'developer': ['Functions', 'Settings manager', 'Webhooks', 'API tokens', 'Packages'],
+  'approvals': ['Need my review', 'My requests', 'Reviewed', 'All requests', 'Approval policies'],
+  'inbox': ['Pending', 'Resolved'],
   'recipes': ['All', 'Active', 'Drafts'],
-  'workflow-studio': ['My workflows', 'Templates'],
+  'workflow-studio': ['Dashboard', 'Analytics', 'Tags'],
   'organizational-data': ['Company information', 'Organizational Structure', 'Job information', 'Employee lifecycle'],
-  'notification-center': ['Channels', 'Delivery rules'],
+  'notification-center': ['Alerts'],
+  'activity-log': ['All events', 'Logins', 'Changes', 'Alerts'],
+  'data-permissions': ['Permission overview', 'Feature access', 'Users overview', 'Admins to migrate'],
   'permissions': ['Permission profiles', 'Feature access', 'User permissions'],
   'billing': ['Invoices', 'Payment methods', 'Subscription'],
   'departments': ['Departments', 'Headcount'],
   'flow-configuration': ['Hiring', 'Onboarding', 'Offboarding'],
+  'saved-supergroups': ['Saved groups', 'Recommendations'],
 };
 
 export function getPageTabs(pageId: string): string[] | undefined {
@@ -198,6 +203,20 @@ const PAGE_META: Record<string, { headline: string; subtext: string; cta: string
     headerCta: 'Create workflow',
     columns: ['Name', 'Trigger', 'Status', 'Last run'],
   },
+  'sandbox': {
+    headline: 'Test changes safely before they go live.',
+    subtext: 'Mirror your production environment to validate payroll, workflows, and configurations without touching real data.',
+    cta: 'Set up sandbox',
+    headerCta: 'Create sandbox',
+    columns: ['Name', 'Status', 'Last refresh', 'Created'],
+  },
+  'activity-log': {
+    headline: 'See exactly what happened, when, and who did it.',
+    subtext: 'A complete, filterable audit trail of every action in Rippling — changes, logins, and configurations.',
+    cta: 'Explore the activity log',
+    headerCta: 'Configure alerts',
+    columns: ['Event', 'Actor', 'Object', 'Timestamp'],
+  },
   'billing': {
     headline: 'Manage your Rippling subscription.',
     subtext: 'View invoices, update payment methods, and see your plan details.',
@@ -234,10 +253,10 @@ const PAGE_META: Record<string, { headline: string; subtext: string; cta: string
     columns: ['Type', 'Records', 'Status'],
   },
   'saved-supergroups': {
-    headline: 'Reusable groups for filters and reports.',
-    subtext: 'Create and manage saved supergroups to quickly filter across Rippling.',
-    cta: 'Create supergroup',
-    headerCta: '',
+    headline: 'Define your employee groups once. Use them everywhere.',
+    subtext: 'Build named, reusable groups based on any employee criteria. Apply the same group to IT app access, permissions, approvals, and policies.',
+    cta: 'Create a group',
+    headerCta: 'Create group',
     columns: ['Name', 'Criteria', 'Members', 'Created'],
   },
   'departments': {
@@ -495,41 +514,6 @@ const DOCUMENTS_FEATURES: FeatureCardDetailConfig[] = [
     modalDescription: 'Monitor completion status and maintain an audit trail for compliance. See who\'s signed what, when, and from where. Set expiration dates for policies that need to be re-signed periodically, and run reports for audits or internal reviews.',
     benefits: ['Audit trail for signatures', 'Expiration alerts', 'Compliance reports'],
     ctaLabel: 'View compliance',
-  },
-];
-
-const FLOW_CONFIG_FEATURES: FeatureCardDetailConfig[] = [
-  {
-    icon: Icon.TYPES.EDIT_OUTLINE,
-    title: 'Default Fields',
-    description: 'Collect information like bank details and emergency contacts.',
-    modalDescription: 'Default fields collect standard information like bank details, emergency contacts, and tax withholding choices during onboarding. You can customize which fields appear for each flow type—onboarding, offboarding, role change—and mark them as required or optional.',
-    benefits: ['Bank details, emergency contacts', 'Customize per flow type', 'Required vs optional'],
-    ctaLabel: 'Edit default fields',
-  },
-  {
-    icon: Icon.TYPES.SETTINGS_OUTLINE,
-    title: 'Document Rules',
-    description: 'Control which documents are sent based on hire criteria.',
-    modalDescription: 'Document rules control which forms and policies are sent based on hire criteria. Route different document sets by role, location, department, or employment type so employees only see what applies to them. Reduce clutter and focus each person on the right paperwork.',
-    benefits: ['Conditional document delivery', 'Based on role, location, department', 'Reduce irrelevant forms'],
-    ctaLabel: 'Add document rules',
-  },
-  {
-    icon: Icon.TYPES.ADD_CIRCLE_OUTLINE,
-    title: 'Custom Fields',
-    description: 'Add custom fields to gather additional info.',
-    modalDescription: 'Custom fields let you gather company-specific data beyond standard defaults. Add text fields, date pickers, dropdowns, and more. Responses flow into employee profiles and can be used in reports, workflows, and downstream systems.',
-    benefits: ['Company-specific data', 'Text, date, select inputs', 'Use in reports and workflows'],
-    ctaLabel: 'Create custom field',
-  },
-  {
-    icon: Icon.TYPES.LAPTOP_OUTLINE,
-    title: 'Device & Tax Settings',
-    description: 'Configure devices and tax form requirements.',
-    modalDescription: 'Configure device assignment rules and tax form requirements for new hires. Define which devices are offered by role or location, and set state-specific tax forms so employees complete the right W-4 or equivalent for their work location.',
-    benefits: ['Device assignment rules', 'Tax form requirements', 'Compliance by state'],
-    ctaLabel: 'Configure settings',
   },
 ];
 
@@ -799,69 +783,6 @@ export const PlatformEmptyState: React.FC<PlatformEmptyStateProps> = ({ pageId, 
           feature={selectedFeature}
           onCancel={() => setSelectedFeature(null)}
           onCtaClick={() => { handleCta(); setSelectedFeature(null); }}
-        />
-      </PageBody>
-    );
-  }
-
-  if (pageId === 'flow-configuration') {
-    const handleCta = onCtaClick ?? (() => {});
-    return (
-      <PageBody theme={theme}>
-        <DocumentsPageContainer theme={theme} size="lg">
-          <PageHeroBanner
-            layout="side-by-side"
-            titleSize="title"
-            title="Configure employee onboarding and offboarding flows"
-            subtitle="Control which fields, forms, and documents are collected during hiring, onboarding, and offboarding—so each employee sees only what applies to them."
-            primaryAction={{ label: 'Start editing fields', onClick: handleCta }}
-            visual={
-              <DocumentsFlowVisual theme={theme}>
-                <DocumentsFlowStep theme={theme}>
-                  <Icon type={Icon.TYPES.FEEDBACK_FORM_OUTLINE} size={24} />
-                </DocumentsFlowStep>
-                <Icon type={Icon.TYPES.CHEVRON_RIGHT} size={20} color={theme.colorOnSurfaceVariant} />
-                <DocumentsFlowStep theme={theme}>
-                  <Icon type={Icon.TYPES.DOCUMENT_OUTLINE} size={24} />
-                </DocumentsFlowStep>
-                <Icon type={Icon.TYPES.CHEVRON_RIGHT} size={20} color={theme.colorOnSurfaceVariant} />
-                <DocumentsFlowStep theme={theme}>
-                  <Icon type={Icon.TYPES.LAPTOP_OUTLINE} size={24} />
-                </DocumentsFlowStep>
-              </DocumentsFlowVisual>
-            }
-            visualMinWidth={280}
-            visualMaxWidth={280}
-          />
-
-          <div style={{ width: '100%', alignSelf: 'stretch' }}>
-            <Separator>How does this work?</Separator>
-          </div>
-
-          <DocumentsFeatureGrid theme={theme}>
-            {FLOW_CONFIG_FEATURES.map((feat, idx) => (
-              <FeatureCard
-                key={idx}
-                icon={feat.icon}
-                title={feat.title}
-                description={feat.description}
-                size="compact"
-                iconVariant="neutral"
-                onClick={() => setSelectedFeature(feat)}
-              />
-            ))}
-          </DocumentsFeatureGrid>
-
-          <DocumentsFooter theme={theme}>
-            Manage Work Authorization, EEO Reporting, and more.
-          </DocumentsFooter>
-        </DocumentsPageContainer>
-
-        <FeatureCardDetailModal
-          isVisible={!!selectedFeature}
-          feature={selectedFeature}
-          onCancel={() => setSelectedFeature(null)}
-          onCtaClick={() => { (onCtaClick ?? (() => {}))(); setSelectedFeature(null); }}
         />
       </PageBody>
     );

@@ -8,12 +8,13 @@ import Button from '@rippling/pebble/Button';
 export interface PageHeroBannerProps {
   layout?: 'side-by-side' | 'stacked';
   titleSize?: 'display' | 'title';
+  eyebrow?: React.ReactNode;
   badge?: React.ReactNode;
   title: string;
   subtitle: string;
   primaryAction?: { label: string; onClick?: () => void };
   secondaryText?: string;
-  visual: React.ReactNode;
+  visual?: React.ReactNode;
   visualMinWidth?: number;
   visualMaxWidth?: number;
   children?: React.ReactNode;
@@ -121,6 +122,7 @@ const StackedVisual = styled.div`
 export const PageHeroBanner: React.FC<PageHeroBannerProps> = ({
   layout = 'side-by-side',
   titleSize,
+  eyebrow,
   badge,
   title,
   subtitle,
@@ -138,6 +140,7 @@ export const PageHeroBanner: React.FC<PageHeroBannerProps> = ({
     return (
       <StackedRoot theme={theme}>
         <StackedContent theme={theme}>
+          {eyebrow}
           {badge && <Badge theme={theme}>{badge}</Badge>}
           <Title theme={theme} stacked titleSize={titleSize}>{title}</Title>
           <Subtitle theme={theme} stacked>{subtitle}</Subtitle>
@@ -151,7 +154,7 @@ export const PageHeroBanner: React.FC<PageHeroBannerProps> = ({
           )}
           {children}
         </StackedContent>
-        <StackedVisual>{visual}</StackedVisual>
+        {visual && <StackedVisual>{visual}</StackedVisual>}
       </StackedRoot>
     );
   }
@@ -159,6 +162,7 @@ export const PageHeroBanner: React.FC<PageHeroBannerProps> = ({
   return (
     <SideBySideRoot theme={theme}>
       <SideBySideContent theme={theme}>
+        {eyebrow}
         {badge && <Badge theme={theme}>{badge}</Badge>}
         <Title theme={theme} titleSize={titleSize}>{title}</Title>
         <Subtitle theme={theme}>{subtitle}</Subtitle>
@@ -172,7 +176,7 @@ export const PageHeroBanner: React.FC<PageHeroBannerProps> = ({
         )}
         {children}
       </SideBySideContent>
-      <SideBySideVisual theme={theme} visualMinWidth={visualMinWidth} visualMaxWidth={visualMaxWidth}>{visual}</SideBySideVisual>
+      {visual && <SideBySideVisual theme={theme} visualMinWidth={visualMinWidth} visualMaxWidth={visualMaxWidth}>{visual}</SideBySideVisual>}
     </SideBySideRoot>
   );
 };

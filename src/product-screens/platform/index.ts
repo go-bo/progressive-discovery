@@ -6,3 +6,6 @@ export { ToolsOverviewPage } from './ToolsOverviewPage';
 export { CompanySettingsOverviewPage } from './CompanySettingsOverviewPage';
 export { OrganizationalDataPage } from './OrganizationalDataPage';
 export { DataCatalogPage } from './DataCatalogPage';
+export { PlatformPrimerDataPage } from './PlatformPrimerDataPage';
+export { PlatformPrimerPage } from './PlatformPrimerPage';
+export { PRIMER_PAGE_IDS, isPrimerFullPage } from './primer-configs';

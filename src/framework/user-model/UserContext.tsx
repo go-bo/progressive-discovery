@@ -1,12 +1,13 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
-import type { UserState, LifecyclePhase, UserRole, ProductId } from './types';
+import type { UserState, LifecyclePhase, UserRole, ProductId, DiscoverySlotVariant } from './types';
 import { DEFAULT_USER_STATE } from './types';
 
 interface UserContextValue extends UserState {
   setLifecyclePhase: (phase: LifecyclePhase) => void;
   setUserRole: (role: UserRole) => void;
-  setActiveProduct: (product: ProductId | 'home') => void;
+  setActiveProduct: (product: ProductId | 'home' | 'platform-primer') => void;
   togglePurchasedProduct: (product: ProductId) => void;
+  setDiscoverySlotVariant: (variant: DiscoverySlotVariant | null) => void;
   resetToDefaults: () => void;
 }
 
@@ -26,7 +27,7 @@ export function UserProvider({ children, initialState }: { children: React.React
     setState(prev => ({ ...prev, userRole: role }));
   }, []);
 
-  const setActiveProduct = useCallback((product: ProductId | 'home') => {
+  const setActiveProduct = useCallback((product: ProductId | 'home' | 'platform-primer') => {
     setState(prev => ({ ...prev, activeProduct: product }));
   }, []);
 
@@ -37,6 +38,10 @@ export function UserProvider({ children, initialState }: { children: React.React
         ? prev.purchasedProducts.filter(p => p !== product)
         : [...prev.purchasedProducts, product],
     }));
+  }, []);
+
+  const setDiscoverySlotVariant = useCallback((discoverySlotVariant: DiscoverySlotVariant | null) => {
+    setState(prev => ({ ...prev, discoverySlotVariant }));
   }, []);
 
   const resetToDefaults = useCallback(() => {
@@ -50,6 +55,7 @@ export function UserProvider({ children, initialState }: { children: React.React
       setUserRole,
       setActiveProduct,
       togglePurchasedProduct,
+      setDiscoverySlotVariant,
       resetToDefaults,
     }}>
       {children}

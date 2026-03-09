@@ -15,6 +15,7 @@ import DesignSpecsContent from './pages/design-specs/DesignSpecsContent';
 // Scenarios
 import TimeDemo from './scenarios/time-demo';
 import SpendDemo from './scenarios/spend-demo';
+import PlatformPrimerDemo from './scenarios/platform-primer-demo';
 // Explorations
 import NavHomeSketchDemo from './explorations/nav-home-sketch/NavHomeSketchDemo';
 import Offsite2026Demo from './explorations/offsite-2026/Offsite2026Demo';
@@ -85,6 +86,7 @@ init().then(() => {
             {/* Scenarios */}
             <Route path="/time/:page?" element={<TimeDemo />} />
             <Route path="/spend/:page?" element={<SpendDemo />} />
+            <Route path="/platform-primer/:page?" element={<PlatformPrimerDemo />} />
 
             {/* Explorations */}
             <Route path="/nav-home-sketch" element={<NavHomeSketchDemo />} />

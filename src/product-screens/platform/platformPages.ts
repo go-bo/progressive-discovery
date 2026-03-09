@@ -23,6 +23,8 @@ export const PLATFORM_PAGES: Record<string, PlatformPageConfig> = {
   'notification-center': { id: 'notification-center', title: 'Notification Center', icon: Icon.TYPES.NOTIFICATION_OUTLINE },
   'recipes': { id: 'recipes', title: 'Recipes', icon: Icon.TYPES.RECIPES_OUTLINE },
   'workflow-studio': { id: 'workflow-studio', title: 'Workflow Studio', icon: Icon.TYPES.THUNDERBOLT_OUTLINE },
+  'sandbox': { id: 'sandbox', title: 'Sandbox', icon: Icon.TYPES.SANDBOX_OUTLINE },
+  'activity-log': { id: 'activity-log', title: 'Activity Log', icon: Icon.TYPES.AUDIT_OBSERVATION_OUTLINE },
   // Company Settings
   'billing': { id: 'billing', title: 'Billing', icon: Icon.TYPES.CREDIT_CARD_OUTLINE },
   'branding': { id: 'branding', title: 'Branding', icon: Icon.TYPES.PAINT_ROLLER_OUTLINE },
@@ -32,7 +34,7 @@ export const PLATFORM_PAGES: Record<string, PlatformPageConfig> = {
   'notifications': { id: 'notifications', title: 'Notifications', icon: Icon.TYPES.NOTIFICATION_OUTLINE },
   'organizational-data': { id: 'organizational-data', title: 'Organizational Data', icon: Icon.TYPES.TABLE_COLUMN_OUTLINE },
   'permissions': { id: 'permissions', title: 'Permissions', icon: Icon.TYPES.KEY },
-  'saved-supergroups': { id: 'saved-supergroups', title: 'Saved Supergroups', icon: Icon.TYPES.REFRESH_OUTLINE },
+  'saved-supergroups': { id: 'saved-supergroups', title: 'Saved Supergroups', icon: Icon.TYPES.USER_GROUP_CHECKED_OUTLINE },
   'security': { id: 'security', title: 'Security', icon: Icon.TYPES.LOCK_OUTLINE },
   'teams': { id: 'teams', title: 'Teams', icon: Icon.TYPES.USERS_OUTLINE },
   'work-locations': { id: 'work-locations', title: 'Work Locations', icon: Icon.TYPES.LOCATION_OUTLINE },

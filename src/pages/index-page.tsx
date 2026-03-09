@@ -83,6 +83,13 @@ const ALL_DEMOS: DemoCard[] = [
     category: 'prototype',
   },
   {
+    title: 'Platform Primer',
+    description: 'Data page sandbox for iterating on platform screen components. Isolated from Time/Spend for safe experimentation.',
+    path: '/platform-primer',
+    icon: Icon.TYPES.CONNECT_DATABASE_OUTLINE,
+    category: 'prototype',
+  },
+  {
     title: 'Nav / Home Sketch',
     description: 'Future navigation and home exploration with pane-based architecture.',
     path: '/nav-home-sketch',
@@ -498,7 +505,7 @@ const IndexPage: React.FC = () => {
             )}
             <GreetingText theme={theme}>Hi {firstName}</GreetingText>
           </GreetingRow>
-          <Title theme={theme}>Self-Service Blitz</Title>
+          <Title theme={theme}>Progressive discovery framework</Title>
           <Description theme={theme}>
             A prototyping environment for exploring and building with Rippling's Pebble Design System. 
             Experiment with components, tokens, and patterns in an interactive sandbox.
