@@ -6,18 +6,22 @@ export type ProductId = 'time' | 'spend' | 'payroll' | 'benefits' | 'talent' | '
 
 export type DiscoverySlotVariant = 'template' | 'capability' | 'unlock';
 
+export type HeroPresentationMode = 'hero' | 'action-card';
+
 export interface UserState {
   lifecyclePhase: LifecyclePhase;
   userRole: UserRole;
   activeProduct: ProductId | 'home' | 'platform-primer';
   purchasedProducts: ProductId[];
   discoverySlotVariant: DiscoverySlotVariant | null;
+  heroPresentationMode: HeroPresentationMode;
 }
 
 export const DEFAULT_USER_STATE: UserState = {
   lifecyclePhase: 'post-trial',
   userRole: 'hr-admin',
   activeProduct: 'home',
-  purchasedProducts: ['time'],
+  purchasedProducts: ['time', 'payroll'],
   discoverySlotVariant: null,
+  heroPresentationMode: 'hero',
 };

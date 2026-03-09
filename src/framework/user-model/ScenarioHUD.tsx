@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Icon from '@rippling/pebble/Icon';
 import { useUserState } from './UserContext';
-import type { LifecyclePhase, UserRole, ProductId, DiscoverySlotVariant } from './types';
+import type { LifecyclePhase, UserRole, ProductId, DiscoverySlotVariant, HeroPresentationMode } from './types';
 
 const HUD_WIDTH = 320;
 
@@ -134,6 +134,11 @@ const PRODUCT_VIEW_OPTIONS: { value: ProductId | 'home' | 'platform-primer'; lab
   { value: 'platform-primer', label: 'Platform Primer', route: '/platform-primer' },
 ];
 
+const HERO_PRESENTATION_OPTIONS: { value: HeroPresentationMode; label: string }[] = [
+  { value: 'hero', label: 'Hero' },
+  { value: 'action-card', label: 'Action Card' },
+];
+
 const DISCOVERY_ROW_OPTIONS: { value: DiscoverySlotVariant | null; label: string }[] = [
   { value: null, label: 'Page Default' },
   { value: 'unlock', label: 'Unlock' },
@@ -166,11 +171,13 @@ export const ScenarioHUD: React.FC = () => {
     userRole,
     purchasedProducts,
     discoverySlotVariant,
+    heroPresentationMode,
     setLifecyclePhase,
     setUserRole,
     setActiveProduct,
     togglePurchasedProduct,
     setDiscoverySlotVariant,
+    setHeroPresentationMode,
     resetToDefaults,
   } = useUserState();
 
@@ -273,20 +280,36 @@ export const ScenarioHUD: React.FC = () => {
         </HUDSection>
 
         {isPlatformPrimer && (
-          <HUDSection>
-            <HUDLabel>Discovery Row</HUDLabel>
-            <OptionRow>
-              {DISCOVERY_ROW_OPTIONS.map(opt => (
-                <OptionChip
-                  key={opt.value ?? 'default'}
-                  isSelected={discoverySlotVariant === opt.value}
-                  onClick={() => setDiscoverySlotVariant(opt.value)}
-                >
-                  {opt.label}
-                </OptionChip>
-              ))}
-            </OptionRow>
-          </HUDSection>
+          <>
+            <HUDSection>
+              <HUDLabel>Hero Presentation</HUDLabel>
+              <OptionRow>
+                {HERO_PRESENTATION_OPTIONS.map(opt => (
+                  <OptionChip
+                    key={opt.value}
+                    isSelected={heroPresentationMode === opt.value}
+                    onClick={() => setHeroPresentationMode(opt.value)}
+                  >
+                    {opt.label}
+                  </OptionChip>
+                ))}
+              </OptionRow>
+            </HUDSection>
+            <HUDSection>
+              <HUDLabel>Discovery Row</HUDLabel>
+              <OptionRow>
+                {DISCOVERY_ROW_OPTIONS.map(opt => (
+                  <OptionChip
+                    key={opt.value ?? 'default'}
+                    isSelected={discoverySlotVariant === opt.value}
+                    onClick={() => setDiscoverySlotVariant(opt.value)}
+                  >
+                    {opt.label}
+                  </OptionChip>
+                ))}
+              </OptionRow>
+            </HUDSection>
+          </>
         )}
 
         <HUDFooter>

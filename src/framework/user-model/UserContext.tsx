@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
-import type { UserState, LifecyclePhase, UserRole, ProductId, DiscoverySlotVariant } from './types';
+import type { UserState, LifecyclePhase, UserRole, ProductId, DiscoverySlotVariant, HeroPresentationMode } from './types';
 import { DEFAULT_USER_STATE } from './types';
 
 interface UserContextValue extends UserState {
@@ -8,6 +8,7 @@ interface UserContextValue extends UserState {
   setActiveProduct: (product: ProductId | 'home' | 'platform-primer') => void;
   togglePurchasedProduct: (product: ProductId) => void;
   setDiscoverySlotVariant: (variant: DiscoverySlotVariant | null) => void;
+  setHeroPresentationMode: (mode: HeroPresentationMode) => void;
   resetToDefaults: () => void;
 }
 
@@ -44,6 +45,10 @@ export function UserProvider({ children, initialState }: { children: React.React
     setState(prev => ({ ...prev, discoverySlotVariant }));
   }, []);
 
+  const setHeroPresentationMode = useCallback((heroPresentationMode: HeroPresentationMode) => {
+    setState(prev => ({ ...prev, heroPresentationMode }));
+  }, []);
+
   const resetToDefaults = useCallback(() => {
     setState({ ...DEFAULT_USER_STATE, ...initialState });
   }, [initialState]);
@@ -56,6 +61,7 @@ export function UserProvider({ children, initialState }: { children: React.React
       setActiveProduct,
       togglePurchasedProduct,
       setDiscoverySlotVariant,
+      setHeroPresentationMode,
       resetToDefaults,
     }}>
       {children}

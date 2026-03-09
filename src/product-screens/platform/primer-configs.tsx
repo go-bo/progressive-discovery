@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import Icon from '@rippling/pebble/Icon';
 import { StyledTheme } from '@/utils/theme';
 import type { FeatureCardGridItem, FeatureCardDetailConfig, TemplateRecipe, DiscoverySlotVariant, SecondaryDiscoveryItem } from '@/spec';
+import type { HeroPresentationMode } from '@/framework/user-model/types';
 
 // ── Types ────────────────────────────────────────────────
 
@@ -34,6 +35,7 @@ export interface PrimerPageConfig {
     label: string;
     items: SecondaryDiscoveryItem[];
   };
+  defaultHeroPresentationMode?: HeroPresentationMode;
 }
 
 // ── Hero Visuals ─────────────────────────────────────────
@@ -172,23 +174,6 @@ const StatLabel = styled.span`
 `;
 
 // Funnel primitives (Documents)
-const FunnelStep = styled.div<{ $width: number }>`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: ${({ $width }) => $width}%;
-  padding: ${({ theme }) => (theme as StyledTheme).space200} ${({ theme }) => (theme as StyledTheme).space300};
-  background: ${({ theme }) => (theme as StyledTheme).colorSurfaceBright};
-  border-radius: ${({ theme }) => (theme as StyledTheme).shapeCornerLg};
-`;
-
-const FunnelStack = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 3px;
-  width: 100%;
-`;
 
 // ── Reports — featured recipe visual ─────────────────────
 
@@ -299,34 +284,36 @@ export const DataCatalogVisual: React.FC<{ theme: StyledTheme }> = ({ theme }) =
   </VisualWrapper>
 );
 
-// ── Documents — pipeline funnel ──────────────────────────
+// ── Documents — document inventory ───────────────────────
 
-const FUNNEL_STEPS = [
-  { label: 'Templates created', count: 24, width: 100 },
-  { label: 'Packets sent', count: 18, width: 82 },
-  { label: 'Signatures collected', count: 14, width: 64 },
-  { label: 'Completed', count: 11, width: 48 },
+const DOCUMENT_ITEMS = [
+  { name: 'Offer letter', type: 'Template', status: 'Active' },
+  { name: 'NDA', type: 'Template', status: 'Active' },
+  { name: 'I-9 verification', type: 'Compliance', status: 'Required' },
+  { name: 'W-4 form', type: 'Tax', status: 'Required' },
+  { name: 'Equipment agreement', type: 'Template', status: 'Active' },
+  { name: 'Direct deposit auth', type: 'Payroll', status: 'Active' },
+  { name: 'Employee handbook', type: 'Policy', status: 'Active' },
+  { name: 'Benefits enrollment', type: 'Benefits', status: 'Pending' },
+  { name: 'IP assignment', type: 'Legal', status: 'Active' },
+  { name: 'Remote work policy', type: 'Policy', status: 'Draft' },
+  { name: 'Stock option grant', type: 'Comp', status: 'Active' },
+  { name: 'Emergency contact', type: 'HR', status: 'Required' },
 ];
 
 export const DocumentsVisual: React.FC<{ theme: StyledTheme }> = ({ theme }) => (
   <VisualWrapper theme={theme}>
     <VisualFrame theme={theme}>
-      <CategoryLabel theme={theme}>Document pipeline</CategoryLabel>
-      <Narrative theme={theme}>11 of 24 packets fully completed this quarter</Narrative>
-      <FunnelStack theme={theme}>
-        {FUNNEL_STEPS.map(step => (
-          <FunnelStep key={step.label} theme={theme} $width={step.width}>
-            <VisualRowName theme={theme} style={{ fontSize: 11 }}>{step.label}</VisualRowName>
-            <VisualRowMeta theme={theme}>{step.count}</VisualRowMeta>
-          </FunnelStep>
+      <VisualList theme={theme}>
+        {DOCUMENT_ITEMS.map((doc) => (
+          <VisualRow key={doc.name} theme={theme}>
+            <VisualRowName theme={theme}>{doc.name}</VisualRowName>
+            <VisualRowMeta theme={theme}>{doc.type} · {doc.status}</VisualRowMeta>
+          </VisualRow>
         ))}
-      </FunnelStack>
-      <StatRow theme={theme}>
-        <Stat><StatValue theme={theme}>46%</StatValue><StatLabel theme={theme}>completion rate</StatLabel></Stat>
-        <Stat><StatValue theme={theme}>2.1d</StatValue><StatLabel theme={theme}>avg time to sign</StatLabel></Stat>
-      </StatRow>
+      </VisualList>
     </VisualFrame>
-    <VisualLabel theme={theme}>Document funnel</VisualLabel>
+    <VisualLabel theme={theme}>Document templates</VisualLabel>
   </VisualWrapper>
 );
 
@@ -641,6 +628,7 @@ export const PRIMER_PAGE_CONFIGS: Record<string, PrimerPageConfig> = {
     heroSubtitle: 'Build dashboards and scheduled reports from every object in Rippling. Filter, join, and export with confidence.',
     heroCta: 'Create a report',
     defaultVariant: 'template',
+    defaultHeroPresentationMode: 'action-card',
     template: {
       linkLabel: 'Start with a template',
       recipes: [
@@ -732,6 +720,9 @@ export const PRIMER_PAGE_CONFIGS: Record<string, PrimerPageConfig> = {
     heroTitle: 'Manage employee documents and acknowledgments',
     heroSubtitle: 'Send policies, collect signatures, automate onboarding packets, and track compliance—all in one place.',
     heroCta: 'Open Documents',
+    fullPage: true,
+    fullPageTitle: 'Documents',
+    fullPageIconFilled: Icon.TYPES.FILE_FILLED,
     defaultVariant: 'capability',
     template: {
       linkLabel: 'Start with a document template',
@@ -905,6 +896,7 @@ export const PRIMER_PAGE_CONFIGS: Record<string, PrimerPageConfig> = {
     heroSubtitle: 'Build custom workflows with triggers, conditions, and actions across every Rippling module. Set it once and let it run.',
     heroCta: 'Build a workflow',
     defaultVariant: 'template',
+    defaultHeroPresentationMode: 'action-card',
     template: {
       linkLabel: 'Start with a recipe',
       recipes: [

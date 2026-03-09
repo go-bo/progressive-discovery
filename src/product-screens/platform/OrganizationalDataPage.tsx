@@ -6,7 +6,7 @@ import Button from '@rippling/pebble/Button';
 import Avatar from '@rippling/pebble/Avatar';
 import TableBasic from '@rippling/pebble/TableBasic';
 import { DiscoveryPageLayout, PlatformPrimer } from '@/spec';
-import type { FeatureCardDetailConfig } from '@/spec';
+import type { FeatureCardDetailConfig, FeatureCardGridItem } from '@/spec';
 
 // ── Layout ──────────────────────────────────────────────
 
@@ -422,8 +422,13 @@ interface TabPrimerConfig {
   title: string;
   subtitle: string;
   cta: string;
-  features: FeatureCardDetailConfig[];
   separatorLabel: string;
+  variant?: 'capability' | 'unlock';
+  features?: FeatureCardDetailConfig[];
+  unlockItems?: FeatureCardGridItem[];
+  unlockSubtitle?: string;
+  layout?: 'side-by-side' | 'stacked';
+  visual?: boolean;
 }
 
 const TAB_PRIMERS: Record<number, TabPrimerConfig> = {
@@ -464,38 +469,32 @@ const TAB_PRIMERS: Record<number, TabPrimerConfig> = {
     ],
   },
   1: {
-    title: 'Map your reporting lines and team structure',
-    subtitle: 'Departments, teams, and reporting lines stay in sync across permissions, policies, and workflows — set it up once.',
+    title: 'Set up org structure',
+    subtitle: 'Map departments, teams, and reporting lines to keep your org chart in sync across all your tools.',
     cta: 'Get started',
-    separatorLabel: 'Org structure powers',
-    features: [
+    separatorLabel: 'Departments power more than your org chart',
+    unlockSubtitle: 'Org data unlocks policies, permissions, workflows, integrations, and more across Rippling.',
+    variant: 'unlock',
+    layout: 'side-by-side',
+    visual: true,
+    unlockItems: [
       {
-        icon: Icon.TYPES.DEPARTMENTS_OUTLINE,
-        title: 'Departments & teams',
-        description: 'Org units that drive policy assignment and access.',
-        benefits: ['Auto-assign policies by department', 'Drive headcount reporting', 'Structure compensation reviews'],
-        ctaLabel: 'View departments',
-      },
-      {
+        id: 'permissions',
         icon: Icon.TYPES.SHIELD_FILLED,
         title: 'Permissions',
-        description: 'Team membership determines who sees what.',
-        benefits: ['Auto-assign app access', 'Role-based visibility', 'Inherited from org structure'],
-        ctaLabel: 'View permissions',
+        description: 'Uses team membership to assign app access automatically. Control who sees what across Rippling.',
       },
       {
+        id: 'policies',
         icon: Icon.TYPES.CUSTOMIZE_POLICY_FILLED,
         title: 'Policies',
-        description: 'Routes schedules and rules based on team ownership.',
-        benefits: ['Department-based policy routing', 'Team-specific schedules', 'Location-aware rules'],
-        ctaLabel: 'View policies',
+        description: 'Routes schedules, time-off rules, and decisions based on team and department ownership.',
       },
       {
+        id: 'workflows',
         icon: Icon.TYPES.REPORT_CHECKLIST_FILLED,
         title: 'Workflows',
-        description: 'Automates approvals based on reporting structure.',
-        benefits: ['Manager-based approval chains', 'Department routing', 'Cross-team escalation'],
-        ctaLabel: 'View workflows',
+        description: 'Automates approvals and routing based on reporting structure, department, and role.',
       },
     ],
   },
@@ -592,21 +591,31 @@ export const OrganizationalDataPage: React.FC<OrganizationalDataPageProps> = ({ 
   const showPrimer = primerConfig && !dismissedTabs.has(activeTabIndex);
 
   if (showPrimer) {
+    const variant = primerConfig.variant ?? 'capability';
+    const heroVisual = primerConfig.visual ? <OrgChartPlaceholder theme={theme} /> : undefined;
+
     return (
       <PlatformPrimer
         hero={{
           title: primerConfig.title,
           subtitle: primerConfig.subtitle,
           primaryAction: { label: primerConfig.cta, onClick: () => dismissTab(activeTabIndex) },
-          layout: 'stacked',
+          layout: primerConfig.layout ?? 'stacked',
           titleSize: 'title',
+          visual: heroVisual,
         }}
-        discoverySlotVariant="capability"
-        discoverySlotCapability={{
+        discoverySlotVariant={variant}
+        discoverySlotCapability={variant === 'capability' && primerConfig.features ? {
           separatorLabel: primerConfig.separatorLabel,
           features: primerConfig.features,
           onCta: () => dismissTab(activeTabIndex),
-        }}
+        } : undefined}
+        discoverySlotUnlock={variant === 'unlock' && primerConfig.unlockItems ? {
+          category: primerConfig.separatorLabel,
+          categorySubtitle: primerConfig.unlockSubtitle,
+          items: primerConfig.unlockItems,
+          iconVariant: 'accent',
+        } : undefined}
         size="md"
       />
     );

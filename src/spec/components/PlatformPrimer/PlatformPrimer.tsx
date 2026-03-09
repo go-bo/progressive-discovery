@@ -1,5 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
+import ActionCard from '@rippling/pebble/ActionCard';
+import Icon from '@rippling/pebble/Icon';
 import { StyledTheme, usePebbleTheme } from '@/utils/theme';
 import { DiscoveryPageLayout } from '../DiscoveryPageLayout/DiscoveryPageLayout';
 import { PageHeroBanner } from '../PageHeroBanner/PageHeroBanner';
@@ -11,6 +13,8 @@ import { DiscoverySlotUnlock } from './DiscoverySlotUnlock';
 import { DiscoverySlotSecondary } from './DiscoverySlotSecondary';
 import type { SecondaryDiscoveryItem } from './DiscoverySlotSecondary';
 import type { FeatureCardGridItem } from '../../patterns/FeatureCardGrid/FeatureCardGrid';
+
+export type HeroPresentationMode = 'hero' | 'action-card';
 
 export type DiscoverySlotVariant = 'template' | 'capability' | 'unlock';
 
@@ -50,6 +54,8 @@ export interface PlatformPrimerProps {
     label: string;
     items: SecondaryDiscoveryItem[];
   };
+  heroPresentationMode?: HeroPresentationMode;
+  heroIcon?: string;
   size?: 'sm' | 'md' | 'lg';
 }
 
@@ -77,6 +83,8 @@ export const PlatformPrimer: React.FC<PlatformPrimerProps> = ({
   discoverySlotCapability,
   discoverySlotUnlock,
   secondaryDiscovery,
+  heroPresentationMode = 'hero',
+  heroIcon,
   size = 'md',
 }) => {
   const { theme } = usePebbleTheme();
@@ -94,6 +102,21 @@ export const PlatformPrimer: React.FC<PlatformPrimerProps> = ({
       visualMinWidth,
       visualMaxWidth,
     } = hero;
+
+    if (heroPresentationMode === 'action-card') {
+      return (
+        <ActionCard
+          icon={heroIcon ?? Icon.TYPES.INFO_CIRCLE_OUTLINE}
+          title={title}
+          caption={subtitle}
+          primaryAction={primaryAction ? {
+            title: primaryAction.label,
+            onClick: primaryAction.onClick ?? (() => {}),
+          } : undefined}
+          shouldShowAsset
+        />
+      );
+    }
 
     return (
       <PageHeroBanner
