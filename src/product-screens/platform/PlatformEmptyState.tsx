@@ -42,7 +42,6 @@ const PAGE_CATEGORY: Record<string, { label: string; page: string }> = {
   'flow-configuration': { label: 'Company Settings', page: 'company-settings-overview' },
   'organizational-data': { label: 'Company Settings', page: 'company-settings-overview' },
   'saved-supergroups': { label: 'Company Settings', page: 'company-settings-overview' },
-  'departments': { label: 'Company Settings', page: 'company-settings-overview' },
   'notifications': { label: 'Company Settings', page: 'company-settings-overview' },
   'permissions': { label: 'Company Settings', page: 'company-settings-overview' },
   'security': { label: 'Company Settings', page: 'company-settings-overview' },
@@ -71,7 +70,6 @@ const PAGE_TABS: Record<string, string[]> = {
   'data-permissions': ['Permission overview', 'Feature access', 'Users overview', 'Admins to migrate'],
   'permissions': ['Permission profiles', 'Feature access', 'User permissions'],
   'billing': ['Invoices', 'Payment methods', 'Subscription'],
-  'departments': ['Departments', 'Headcount'],
   'flow-configuration': ['Hiring', 'Onboarding', 'Offboarding'],
   'saved-supergroups': ['Saved groups', 'Recommendations'],
 };
@@ -258,13 +256,6 @@ const PAGE_META: Record<string, { headline: string; subtext: string; cta: string
     cta: 'Create a group',
     headerCta: 'Create group',
     columns: ['Name', 'Criteria', 'Members', 'Created'],
-  },
-  'departments': {
-    headline: 'Organize your workforce by department.',
-    subtext: 'Create departments and sub-departments. Use them for reporting, approvals, and permissions.',
-    cta: 'Create first department',
-    headerCta: 'Create department',
-    columns: ['Name', 'Head', 'Headcount', 'Created'],
   },
   'notifications': {
     headline: 'Decide what triggers notifications and who receives them.',

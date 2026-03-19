@@ -29,7 +29,6 @@ export const PLATFORM_PAGES: Record<string, PlatformPageConfig> = {
   'billing': { id: 'billing', title: 'Billing', icon: Icon.TYPES.CREDIT_CARD_OUTLINE },
   'branding': { id: 'branding', title: 'Branding', icon: Icon.TYPES.PAINT_ROLLER_OUTLINE },
   'company-info': { id: 'company-info', title: 'Company Information', icon: Icon.TYPES.OFFICE_OUTLINE },
-  'departments': { id: 'departments', title: 'Departments', icon: Icon.TYPES.DEPARTMENTS_OUTLINE },
   'flow-configuration': { id: 'flow-configuration', title: 'Flow Configuration', icon: Icon.TYPES.FILTER },
   'notifications': { id: 'notifications', title: 'Notifications', icon: Icon.TYPES.NOTIFICATION_OUTLINE },
   'organizational-data': { id: 'organizational-data', title: 'Organizational Data', icon: Icon.TYPES.TABLE_COLUMN_OUTLINE },

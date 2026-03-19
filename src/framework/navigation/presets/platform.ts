@@ -5,7 +5,7 @@ import type { NavSectionData, SubmenuGroupData } from '../types';
 const PLATFORM_SECTION_PAGES: Record<string, string[]> = {
   'data': ['data-overview', 'reports', 'data-catalog', 'data-permissions', 'data-pipelines', 'data-transformations'],
   'tools': ['tools-overview', 'activity-log', 'app-studio', 'approvals', 'chat', 'developer', 'documents', 'inbox', 'notification-center', 'recipes', 'workflow-studio', 'sandbox'],
-  'company-settings': ['company-settings-overview', 'flow-configuration', 'organizational-data', 'permissions', 'saved-supergroups', 'security', 'billing', 'branding', 'company-info', 'departments', 'notifications', 'teams', 'work-locations'],
+  'company-settings': ['company-settings-overview', 'flow-configuration', 'organizational-data', 'permissions', 'saved-supergroups', 'security', 'billing', 'branding', 'company-info', 'notifications', 'teams', 'work-locations'],
 };
 
 export function isPlatformSectionActive(sectionId: string, activePage: string): boolean {
