@@ -28,18 +28,18 @@ const HeroInner = styled.div`
 // ── Data Catalog Preview (placeholder hero visual) ───────
 
 const CATALOG_OBJECTS = [
-  { name: 'Employees', type: 'Core', records: '245' },
-  { name: 'Pay runs', type: 'Payroll', records: '12' },
-  { name: 'Policies', type: 'Core', records: '8' },
-  { name: 'Time off requests', type: 'Time', records: '34' },
-  { name: 'Departments', type: 'Org', records: '18' },
-  { name: 'Benefits enrollments', type: 'Benefits', records: '89' },
-  { name: 'Custom fields', type: 'Core', records: '156' },
-  { name: 'Job postings', type: 'Recruiting', records: '23' },
-  { name: 'Comp bands', type: 'Comp', records: '41' },
-  { name: 'Documents', type: 'Docs', records: '312' },
-  { name: 'Approval workflows', type: 'Workflows', records: '7' },
-  { name: 'Training assignments', type: 'Learning', records: '204' },
+  { name: 'Employee', type: 'Core', records: '245' },
+  { name: 'Accounting Integrations', type: 'Finance', records: '3' },
+  { name: 'Audit Log', type: 'Platform', records: '12,408' },
+  { name: 'Billing', type: 'Finance', records: '48' },
+  { name: 'Compliance 360', type: 'HR', records: '17' },
+  { name: 'Documents', type: 'Platform', records: '312' },
+  { name: 'Employee Lifecycle', type: 'HR', records: '1,204' },
+  { name: 'Filing Factory', type: 'Payroll', records: '89' },
+  { name: 'Functions', type: 'Developer', records: '14' },
+  { name: 'Google Workspace', type: 'IT', records: '156' },
+  { name: 'IT Activity Log', type: 'IT', records: '2,341' },
+  { name: 'IT Management', type: 'IT', records: '67' },
 ];
 
 const FRAME_RADIUS = '16px';
@@ -119,7 +119,6 @@ const DataCatalogPlaceholder: React.FC<{ theme: StyledTheme }> = ({ theme }) => 
         ))}
       </CatalogList>
     </CatalogFrame>
-    <CatalogLabel theme={theme}>Data catalog preview</CatalogLabel>
   </CatalogWrapper>
 );
 
@@ -131,21 +130,21 @@ const DATA_CATALOG_POWER_ITEMS: FeatureCardGridItem[] = [
     icon: Icon.TYPES.REPORT_FILLED,
     title: 'Reports',
     description: 'Build dashboards and scheduled reports from every object. Filter, join, and export with confidence.',
-    primaryAction: { label: 'Create report', onClick: () => {} },
+    primaryAction: { label: 'View reports', onClick: () => {} },
   },
   {
-    id: 'pipelines',
-    icon: Icon.TYPES.LINK_HORIZONTAL,
-    title: 'Data pipelines',
-    description: 'Sync to Snowflake, BigQuery, or your data warehouse. Know exactly which fields map where.',
-    primaryAction: { label: 'Set up pipeline', onClick: () => {} },
+    id: 'workflows',
+    icon: Icon.TYPES.REPORT_CHECKLIST_FILLED,
+    title: 'Workflows',
+    description: 'Trigger automations from data changes — route approvals, provision access, and notify stakeholders.',
+    primaryAction: { label: 'View workflows', onClick: () => {} },
   },
   {
-    id: 'permissions',
-    icon: Icon.TYPES.SHIELD_FILLED,
-    title: 'Data permissions',
-    description: 'Control who sees sensitive fields. Field-level access keeps PII and financial data protected.',
-    primaryAction: { label: 'Manage permissions', onClick: () => {} },
+    id: 'activity-log',
+    icon: Icon.TYPES.AUDIT_OBSERVATION_OUTLINE,
+    title: 'Activity Log',
+    description: 'See exactly what changed, when, and who did it — a full audit trail across every object.',
+    primaryAction: { label: 'View activity', onClick: () => {} },
   },
 ];
 

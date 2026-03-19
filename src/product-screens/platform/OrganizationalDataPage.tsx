@@ -7,6 +7,11 @@ import Avatar from '@rippling/pebble/Avatar';
 import TableBasic from '@rippling/pebble/TableBasic';
 import { DiscoveryPageLayout, PlatformPrimer } from '@/spec';
 import type { FeatureCardDetailConfig, FeatureCardGridItem } from '@/spec';
+import owlImg from '@/assets/owl.png';
+import dolphinImg from '@/assets/dolphin.png';
+import otterImg from '@/assets/otter.png';
+import eagleImg from '@/assets/eagle.png';
+import bearImg from '@/assets/bear.png';
 
 // ── Layout ──────────────────────────────────────────────
 
@@ -100,39 +105,43 @@ const TableWrapper = styled.div`
 // ── Org Chart Preview (placeholder hero visual) ──────────
 
 const ORG_CHART_PEOPLE = [
-  { name: 'Wise Owl', title: 'CEO', count: '7 · 5,576' },
-  { name: 'Strong Bear', title: 'COO', count: '14 · 2,367' },
-  { name: 'Smart Dolphin', title: 'CFO', count: '9 · 189' },
-  { name: 'Global Otter', title: 'Global Director', count: '10 · 36' },
-  { name: 'Sharp Eagle', title: 'General Counsel', count: '10 · 36' },
+  { name: 'Wise Owl', title: 'CEO', count: '7 · 5,576', img: owlImg },
+  { name: 'Strong Bear', title: 'COO', count: '14 · 2,367', img: bearImg },
+  { name: 'Smart Dolphin', title: 'CFO', count: '9 · 189', img: dolphinImg },
+  { name: 'Global Otter', title: 'Global Director', count: '10 · 36', img: otterImg },
+  { name: 'Sharp Eagle', title: 'General Counsel', count: '10 · 36', img: eagleImg },
 ];
 
 const ORG_CHART_RADIUS = '16px';
 
 const OrgChartFrame = styled.div`
+  width: 420px;
+  height: 350px;
   position: relative;
+  overflow: hidden;
   background: ${({ theme }) => (theme as StyledTheme).colorSurfaceDim};
   border: 6px solid ${({ theme }) => (theme as StyledTheme).colorSurfaceBright};
   border-radius: ${ORG_CHART_RADIUS};
-  box-shadow: 0 0 0 1px ${({ theme }) => (theme as StyledTheme).colorOutlineVariant};
-  padding: ${({ theme }) => (theme as StyledTheme).space600};
-  padding-bottom: ${({ theme }) => (theme as StyledTheme).space1000};
-  padding-right: ${({ theme }) => (theme as StyledTheme).space800};
-  min-height: 336px;
-  /* 20% larger overall (min-height 336 vs 280), cards stay same – more room for zoom controls */
+  outline: 1px solid ${({ theme }) => (theme as StyledTheme).colorOutlineVariant};
+  outline-offset: -1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: ${({ theme }) => (theme as StyledTheme).space400};
+  box-sizing: border-box;
 `;
 
 const OrgChartTree = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: ${({ theme }) => (theme as StyledTheme).space300};
+  gap: ${({ theme }) => (theme as StyledTheme).space800};
 `;
 
 const OrgChartRow = styled.div`
   display: flex;
   justify-content: center;
-  gap: ${({ theme }) => (theme as StyledTheme).space600};
+  gap: ${({ theme }) => (theme as StyledTheme).space800};
 `;
 
 const OrgChartCardWrap = styled.div`
@@ -156,7 +165,7 @@ const OrgChartCard = styled.div`
 const OrgChartCardContent = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 0;
 `;
 
 const OrgChartCardName = styled.span`
@@ -178,11 +187,33 @@ const OrgChartCardCount = styled.span`
   gap: 4px;
 `;
 
+const OrgChartAvatar = styled.img`
+  width: 28px;
+  height: 28px;
+  border-radius: ${({ theme }) => (theme as StyledTheme).shapeCornerFull};
+  object-fit: cover;
+  flex-shrink: 0;
+`;
+
 const OrgChartAddIcon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   color: ${({ theme }) => (theme as StyledTheme).colorOnSurfaceVariant};
+`;
+
+const OrgChartConnectorV = styled.div<{ $h?: number }>`
+  width: 2px;
+  height: ${({ $h }) => $h ?? 16}px;
+  background: ${({ theme }) => (theme as StyledTheme).colorOutline};
+  flex-shrink: 0;
+`;
+
+const OrgChartTBranch = styled.div`
+  position: relative;
+  display: flex;
+  justify-content: center;
+  width: 100%;
 `;
 
 const OrgChartControls = styled.div`
@@ -223,115 +254,80 @@ const OrgChartWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  /* 20% larger overall (576x336 vs 480x280), maintains aspect ratio */
-  width: 576px;
-  max-width: 100%;
+  width: 420px !important;
+  min-width: 420px !important;
+  max-width: 420px !important;
+  flex-shrink: 0;
+  box-sizing: border-box;
 `;
 
 const OrgChartPlaceholder: React.FC<{ theme: StyledTheme }> = ({ theme }) => (
   <OrgChartWrapper theme={theme}>
   <OrgChartFrame theme={theme}>
-    <OrgChartTree theme={theme}>
-      <OrgChartRow theme={theme}>
+    <OrgChartTree theme={theme} style={{ position: 'relative' }}>
+      {/* LINE 1: One vertical line from root down the center of the whole chart */}
+      <div style={{ position: 'absolute', left: '50%', top: 46, bottom: 29, width: 1, background: theme.colorOutline, transform: 'translateX(-50%)', zIndex: 0 }} />
+
+      {/* Root card */}
+      <OrgChartRow theme={theme} style={{ position: 'relative', zIndex: 1 }}>
         <OrgChartCardWrap theme={theme}>
           <OrgChartCard theme={theme}>
-            <Avatar name={ORG_CHART_PEOPLE[0].name} size={Avatar.SIZES.S} />
+            <OrgChartAvatar theme={theme} src={ORG_CHART_PEOPLE[0].img} alt={ORG_CHART_PEOPLE[0].name} />
             <OrgChartCardContent theme={theme}>
               <OrgChartCardName theme={theme}>{ORG_CHART_PEOPLE[0].name}</OrgChartCardName>
               <OrgChartCardTitle theme={theme}>{ORG_CHART_PEOPLE[0].title}</OrgChartCardTitle>
-              <OrgChartCardCount theme={theme}>
-                <Icon type={Icon.TYPES.USER_GROUP_CHECKED_OUTLINE} size={12} />
-                {ORG_CHART_PEOPLE[0].count}
-              </OrgChartCardCount>
             </OrgChartCardContent>
           </OrgChartCard>
-          <OrgChartAddIcon theme={theme}>
-            <Icon type={Icon.TYPES.ADD} size={14} />
-          </OrgChartAddIcon>
         </OrgChartCardWrap>
       </OrgChartRow>
-      <OrgChartRow theme={theme}>
-        <OrgChartCardWrap theme={theme}>
+
+      {/* Level 2 row */}
+      <OrgChartRow theme={theme} style={{ position: 'relative', zIndex: 1 }}>
+        <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, height: 1, background: theme.colorOutline, zIndex: 0 }} />
+        <OrgChartCardWrap theme={theme} style={{ position: 'relative', zIndex: 1 }}>
           <OrgChartCard theme={theme}>
-            <Avatar name={ORG_CHART_PEOPLE[1].name} size={Avatar.SIZES.S} />
+            <OrgChartAvatar theme={theme} src={ORG_CHART_PEOPLE[1].img} alt={ORG_CHART_PEOPLE[1].name} />
             <OrgChartCardContent theme={theme}>
               <OrgChartCardName theme={theme}>{ORG_CHART_PEOPLE[1].name}</OrgChartCardName>
               <OrgChartCardTitle theme={theme}>{ORG_CHART_PEOPLE[1].title}</OrgChartCardTitle>
-              <OrgChartCardCount theme={theme}>
-                <Icon type={Icon.TYPES.USER_GROUP_CHECKED_OUTLINE} size={12} />
-                {ORG_CHART_PEOPLE[1].count}
-              </OrgChartCardCount>
             </OrgChartCardContent>
           </OrgChartCard>
-          <OrgChartAddIcon theme={theme}>
-            <Icon type={Icon.TYPES.ADD} size={14} />
-          </OrgChartAddIcon>
         </OrgChartCardWrap>
-        <OrgChartCardWrap theme={theme}>
+        <OrgChartCardWrap theme={theme} style={{ position: 'relative', zIndex: 1 }}>
           <OrgChartCard theme={theme}>
-            <Avatar name={ORG_CHART_PEOPLE[2].name} size={Avatar.SIZES.S} />
+            <OrgChartAvatar theme={theme} src={ORG_CHART_PEOPLE[2].img} alt={ORG_CHART_PEOPLE[2].name} />
             <OrgChartCardContent theme={theme}>
               <OrgChartCardName theme={theme}>{ORG_CHART_PEOPLE[2].name}</OrgChartCardName>
               <OrgChartCardTitle theme={theme}>{ORG_CHART_PEOPLE[2].title}</OrgChartCardTitle>
-              <OrgChartCardCount theme={theme}>
-                <Icon type={Icon.TYPES.USER_GROUP_CHECKED_OUTLINE} size={12} />
-                {ORG_CHART_PEOPLE[2].count}
-              </OrgChartCardCount>
             </OrgChartCardContent>
           </OrgChartCard>
-          <OrgChartAddIcon theme={theme}>
-            <Icon type={Icon.TYPES.ADD} size={14} />
-          </OrgChartAddIcon>
         </OrgChartCardWrap>
       </OrgChartRow>
-      <OrgChartRow theme={theme}>
-        <OrgChartCardWrap theme={theme}>
+
+      {/* Level 3 row */}
+      <OrgChartRow theme={theme} style={{ position: 'relative', zIndex: 1 }}>
+        <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, height: 1, background: theme.colorOutline, zIndex: 0 }} />
+        <OrgChartCardWrap theme={theme} style={{ position: 'relative', zIndex: 1 }}>
           <OrgChartCard theme={theme}>
-            <Avatar name={ORG_CHART_PEOPLE[3].name} size={Avatar.SIZES.S} />
+            <OrgChartAvatar theme={theme} src={ORG_CHART_PEOPLE[3].img} alt={ORG_CHART_PEOPLE[3].name} />
             <OrgChartCardContent theme={theme}>
               <OrgChartCardName theme={theme}>{ORG_CHART_PEOPLE[3].name}</OrgChartCardName>
               <OrgChartCardTitle theme={theme}>{ORG_CHART_PEOPLE[3].title}</OrgChartCardTitle>
-              <OrgChartCardCount theme={theme}>
-                <Icon type={Icon.TYPES.USER_GROUP_CHECKED_OUTLINE} size={12} />
-                {ORG_CHART_PEOPLE[3].count}
-              </OrgChartCardCount>
             </OrgChartCardContent>
           </OrgChartCard>
-          <OrgChartAddIcon theme={theme}>
-            <Icon type={Icon.TYPES.ADD} size={14} />
-          </OrgChartAddIcon>
         </OrgChartCardWrap>
-        <OrgChartCardWrap theme={theme}>
+        <OrgChartCardWrap theme={theme} style={{ position: 'relative', zIndex: 1 }}>
           <OrgChartCard theme={theme}>
-            <Avatar name={ORG_CHART_PEOPLE[4].name} size={Avatar.SIZES.S} />
+            <OrgChartAvatar theme={theme} src={ORG_CHART_PEOPLE[4].img} alt={ORG_CHART_PEOPLE[4].name} />
             <OrgChartCardContent theme={theme}>
               <OrgChartCardName theme={theme}>{ORG_CHART_PEOPLE[4].name}</OrgChartCardName>
               <OrgChartCardTitle theme={theme}>{ORG_CHART_PEOPLE[4].title}</OrgChartCardTitle>
-              <OrgChartCardCount theme={theme}>
-                <Icon type={Icon.TYPES.USER_GROUP_CHECKED_OUTLINE} size={12} />
-                {ORG_CHART_PEOPLE[4].count}
-              </OrgChartCardCount>
             </OrgChartCardContent>
           </OrgChartCard>
-          <OrgChartAddIcon theme={theme}>
-            <Icon type={Icon.TYPES.ADD} size={14} />
-          </OrgChartAddIcon>
         </OrgChartCardWrap>
       </OrgChartRow>
     </OrgChartTree>
-    <OrgChartControls theme={theme}>
-      <OrgChartControlBtn theme={theme} type="button" aria-label="Fullscreen">
-        <Icon type={Icon.TYPES.EXPAND} size={16} />
-      </OrgChartControlBtn>
-      <OrgChartControlBtn theme={theme} type="button" aria-label="Zoom in">
-        <Icon type={Icon.TYPES.ADD} size={16} />
-      </OrgChartControlBtn>
-      <OrgChartControlBtn theme={theme} type="button" aria-label="Zoom out">
-        <Icon type={Icon.TYPES.REMOVE} size={16} />
-      </OrgChartControlBtn>
-    </OrgChartControls>
   </OrgChartFrame>
-  <OrgChartLabel theme={theme}>Org chart preview</OrgChartLabel>
   </OrgChartWrapper>
 );
 
@@ -469,32 +465,32 @@ const TAB_PRIMERS: Record<number, TabPrimerConfig> = {
     ],
   },
   1: {
-    title: 'Set up org structure',
-    subtitle: 'Map departments, teams, and reporting lines to keep your org chart in sync across all your tools.',
-    cta: 'Get started',
-    separatorLabel: 'Departments power more than your org chart',
-    unlockSubtitle: 'Org data unlocks policies, permissions, workflows, integrations, and more across Rippling.',
+    title: 'Departments power everything',
+    subtitle: 'Departments are the single most leveraged piece of org data — nearly every product area reads from them to power automation, reporting, and access control.',
+    cta: 'Open departments',
+    separatorLabel: 'What adding departments unlocks',
+    unlockSubtitle: 'Every department you define feeds into HR, IT, Finance, and Platform — automating access, routing decisions, and driving reports across the board.',
     variant: 'unlock',
     layout: 'side-by-side',
     visual: true,
     unlockItems: [
       {
-        id: 'permissions',
-        icon: Icon.TYPES.SHIELD_FILLED,
-        title: 'Permissions',
-        description: 'Uses team membership to assign app access automatically. Control who sees what across Rippling.',
+        id: 'it-access',
+        icon: Icon.TYPES.LAPTOP_OUTLINE,
+        title: 'Automated IT provisioning',
+        description: 'Auto-provision apps and tools by department — new hires get the right access from day one.',
       },
       {
-        id: 'policies',
+        id: 'headcount-spend',
+        icon: Icon.TYPES.DOLLAR_CIRCLE_OUTLINE,
+        title: 'Headcount, budgets & spend',
+        description: 'Plan hires, allocate budgets, and track payroll and expenses at the department level with GL mapping.',
+      },
+      {
+        id: 'policies-workflows',
         icon: Icon.TYPES.CUSTOMIZE_POLICY_FILLED,
-        title: 'Policies',
-        description: 'Routes schedules, time-off rules, and decisions based on team and department ownership.',
-      },
-      {
-        id: 'workflows',
-        icon: Icon.TYPES.REPORT_CHECKLIST_FILLED,
-        title: 'Workflows',
-        description: 'Automates approvals and routing based on reporting structure, department, and role.',
+        title: 'Policies, approvals & reporting',
+        description: 'Route approvals, target policies, build dynamic Supergroups, and filter any report by department.',
       },
     ],
   },
@@ -603,6 +599,7 @@ export const OrganizationalDataPage: React.FC<OrganizationalDataPageProps> = ({ 
           layout: primerConfig.layout ?? 'stacked',
           titleSize: 'title',
           visual: heroVisual,
+          ...(heroVisual ? { visualMinWidth: 420, visualMaxWidth: 420 } : {}),
         }}
         discoverySlotVariant={variant}
         discoverySlotCapability={variant === 'capability' && primerConfig.features ? {

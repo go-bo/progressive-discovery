@@ -41,7 +41,7 @@ export interface PrimerPageConfig {
 // ── Hero Visuals ─────────────────────────────────────────
 
 const FRAME_RADIUS = '16px';
-const VISUAL_WIDTH = 370;
+const VISUAL_WIDTH = 420;
 
 const VisualFrame = styled.div`
   width: ${VISUAL_WIDTH}px;
@@ -247,25 +247,24 @@ export const ReportsVisual: React.FC<{ theme: StyledTheme }> = ({ theme }) => (
         ))}
       </VisualList>
     </VisualFrame>
-    <VisualLabel theme={theme}>Report templates</VisualLabel>
   </VisualWrapper>
 );
 
 // ── Data Catalog — object inventory ──────────────────────
 
 const CATALOG_OBJECTS = [
-  { name: 'Employees', type: 'Core', records: '245' },
-  { name: 'Pay runs', type: 'Payroll', records: '12' },
-  { name: 'Policies', type: 'Core', records: '8' },
-  { name: 'Time off requests', type: 'Time', records: '34' },
-  { name: 'Departments', type: 'Org', records: '18' },
-  { name: 'Benefits enrollments', type: 'Benefits', records: '89' },
-  { name: 'Custom fields', type: 'Core', records: '156' },
-  { name: 'Job postings', type: 'Recruiting', records: '23' },
-  { name: 'Comp bands', type: 'Comp', records: '41' },
-  { name: 'Documents', type: 'Docs', records: '312' },
-  { name: 'Approval workflows', type: 'Workflows', records: '7' },
-  { name: 'Training assignments', type: 'Learning', records: '204' },
+  { name: 'Employee', type: 'Core', records: '245' },
+  { name: 'Accounting Integrations', type: 'Finance', records: '3' },
+  { name: 'Audit Log', type: 'Platform', records: '12,408' },
+  { name: 'Billing', type: 'Finance', records: '48' },
+  { name: 'Compliance 360', type: 'HR', records: '17' },
+  { name: 'Documents', type: 'Platform', records: '312' },
+  { name: 'Employee Lifecycle', type: 'HR', records: '1,204' },
+  { name: 'Filing Factory', type: 'Payroll', records: '89' },
+  { name: 'Functions', type: 'Developer', records: '14' },
+  { name: 'Google Workspace', type: 'IT', records: '156' },
+  { name: 'IT Activity Log', type: 'IT', records: '2,341' },
+  { name: 'IT Management', type: 'IT', records: '67' },
 ];
 
 export const DataCatalogVisual: React.FC<{ theme: StyledTheme }> = ({ theme }) => (
@@ -280,40 +279,183 @@ export const DataCatalogVisual: React.FC<{ theme: StyledTheme }> = ({ theme }) =
         ))}
       </VisualList>
     </VisualFrame>
-    <VisualLabel theme={theme}>Data catalog preview</VisualLabel>
   </VisualWrapper>
 );
 
-// ── Documents — document inventory ───────────────────────
+// ── Documents — branching flow visual ─────────────────────
 
-const DOCUMENT_ITEMS = [
-  { name: 'Offer letter', type: 'Template', status: 'Active' },
-  { name: 'NDA', type: 'Template', status: 'Active' },
-  { name: 'I-9 verification', type: 'Compliance', status: 'Required' },
-  { name: 'W-4 form', type: 'Tax', status: 'Required' },
-  { name: 'Equipment agreement', type: 'Template', status: 'Active' },
-  { name: 'Direct deposit auth', type: 'Payroll', status: 'Active' },
-  { name: 'Employee handbook', type: 'Policy', status: 'Active' },
-  { name: 'Benefits enrollment', type: 'Benefits', status: 'Pending' },
-  { name: 'IP assignment', type: 'Legal', status: 'Active' },
-  { name: 'Remote work policy', type: 'Policy', status: 'Draft' },
-  { name: 'Stock option grant', type: 'Comp', status: 'Active' },
-  { name: 'Emergency contact', type: 'HR', status: 'Required' },
+const DocFlowFrame = styled.div`
+  width: ${VISUAL_WIDTH}px;
+  height: 350px;
+  position: relative;
+  overflow: hidden;
+  background: ${({ theme }) => (theme as StyledTheme).colorSurfaceDim};
+  border: 6px solid ${({ theme }) => (theme as StyledTheme).colorSurfaceBright};
+  border-radius: ${FRAME_RADIUS};
+  outline: 1px solid ${({ theme }) => (theme as StyledTheme).colorOutlineVariant};
+  outline-offset: -1px;
+  display: flex;
+  align-items: center;
+  padding: ${({ theme }) => (theme as StyledTheme).space400};
+  box-sizing: border-box;
+`;
+
+const DocFlowGrid = styled.div`
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 0;
+`;
+
+const DocTrigger = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: ${({ theme }) => (theme as StyledTheme).space200};
+  flex-shrink: 0;
+  width: 70px;
+  margin-top: 36px;
+`;
+
+const DocTriggerIcon = styled.div`
+  width: 44px;
+  height: 44px;
+  border-radius: ${({ theme }) => (theme as StyledTheme).shapeCornerLg};
+  background: ${({ theme }) => (theme as StyledTheme).colorPrimaryContainer};
+  border: 2px solid ${({ theme }) => (theme as StyledTheme).colorOutlineVariant};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+`;
+
+const DocTriggerLabel = styled.span`
+  ${({ theme }) => (theme as StyledTheme).typestyleV2LabelSmall};
+  color: ${({ theme }) => (theme as StyledTheme).colorOnSurface};
+  text-align: center;
+  line-height: 1.2;
+`;
+
+const DocBranch = styled.div`
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+`;
+
+const DocOutcomes = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => (theme as StyledTheme).space200};
+  flex: 1;
+  min-width: 0;
+  margin-left: -6px;
+  position: relative;
+  z-index: 1;
+`;
+
+const DocOutcomeCard = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => (theme as StyledTheme).space200};
+  background: ${({ theme }) => (theme as StyledTheme).colorSurfaceBright};
+  border-radius: ${({ theme }) => (theme as StyledTheme).shapeCornerLg};
+  padding: ${({ theme }) => (theme as StyledTheme).space200} ${({ theme }) => (theme as StyledTheme).space300};
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  margin-right: ${({ theme }) => (theme as StyledTheme).space300};
+`;
+
+const DocOutcomeIconWrap = styled.div`
+  width: 28px;
+  height: 28px;
+  border-radius: ${({ theme }) => (theme as StyledTheme).shapeCornerMd};
+  background: ${({ theme }) => (theme as StyledTheme).colorSurfaceContainerLow};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+`;
+
+const DocOutcomeText = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+`;
+
+const DocOutcomeTitle = styled.span`
+  ${({ theme }) => (theme as StyledTheme).typestyleV2LabelMedium};
+  color: ${({ theme }) => (theme as StyledTheme).colorOnSurface};
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+const DocOutcomeSub = styled.span`
+  ${({ theme }) => (theme as StyledTheme).typestyleV2BodySmall};
+  color: ${({ theme }) => (theme as StyledTheme).colorOnSurfaceVariant};
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+const DocCheckCircle = styled.div`
+  width: 20px;
+  height: 20px;
+  border-radius: ${({ theme }) => (theme as StyledTheme).shapeCornerFull};
+  background: ${({ theme }) => (theme as StyledTheme).colorSuccess};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+`;
+
+const DOC_FLOW_OUTCOMES = [
+  { icon: Icon.TYPES.SIGNATURE_OUTLINE, title: 'Offer letter signed', sub: 'E-signature collected' },
+  { icon: Icon.TYPES.DOCUMENT_OUTLINE, title: 'NDA acknowledged', sub: 'Auto-distributed' },
+  { icon: Icon.TYPES.SEARCH_OUTLINE, title: 'I-9 verified', sub: 'Compliance tracked' },
 ];
 
 export const DocumentsVisual: React.FC<{ theme: StyledTheme }> = ({ theme }) => (
   <VisualWrapper theme={theme}>
-    <VisualFrame theme={theme}>
-      <VisualList theme={theme}>
-        {DOCUMENT_ITEMS.map((doc) => (
-          <VisualRow key={doc.name} theme={theme}>
-            <VisualRowName theme={theme}>{doc.name}</VisualRowName>
-            <VisualRowMeta theme={theme}>{doc.type} · {doc.status}</VisualRowMeta>
-          </VisualRow>
-        ))}
-      </VisualList>
-    </VisualFrame>
-    <VisualLabel theme={theme}>Document templates</VisualLabel>
+    <DocFlowFrame theme={theme}>
+      <DocFlowGrid>
+        <DocTrigger theme={theme}>
+          <DocTriggerIcon theme={theme}>
+            <Icon type={Icon.TYPES.PROVISION_USERS_ONBOARD_OUTLINE} size={20} color={theme.colorOnPrimaryContainer} />
+          </DocTriggerIcon>
+          <DocTriggerLabel theme={theme}>New hire<br />onboard</DocTriggerLabel>
+        </DocTrigger>
+        <DocBranch>
+          <svg width="56" height="180" viewBox="-20 0 76 180" fill="none">
+            <path d="M-20 90 L0 90" stroke={theme.colorOutlineVariant} strokeWidth="2" fill="none" />
+            <path d="M0 90 C16 90, 28 10, 48 10" stroke={theme.colorOutlineVariant} strokeWidth="2" fill="none" />
+            <path d="M0 90 C16 90, 28 90, 48 90" stroke={theme.colorOutlineVariant} strokeWidth="2" fill="none" />
+            <path d="M0 90 C16 90, 28 170, 48 170" stroke={theme.colorOutlineVariant} strokeWidth="2" fill="none" />
+            <circle cx="48" cy="10" r="4" fill={theme.colorPrimary} />
+            <circle cx="48" cy="90" r="4" fill={theme.colorPrimary} />
+            <circle cx="48" cy="170" r="4" fill={theme.colorPrimary} />
+          </svg>
+        </DocBranch>
+        <DocOutcomes theme={theme}>
+          {DOC_FLOW_OUTCOMES.map((item) => (
+            <DocOutcomeCard key={item.title} theme={theme}>
+              <DocOutcomeIconWrap theme={theme}>
+                <Icon type={item.icon} size={16} color={theme.colorOnSurfaceVariant} />
+              </DocOutcomeIconWrap>
+              <DocOutcomeText>
+                <DocOutcomeTitle theme={theme}>{item.title}</DocOutcomeTitle>
+                <DocOutcomeSub theme={theme}>{item.sub}</DocOutcomeSub>
+              </DocOutcomeText>
+              <DocCheckCircle theme={theme}>
+                <Icon type={Icon.TYPES.CHECK} size={12} color="#fff" />
+              </DocCheckCircle>
+            </DocOutcomeCard>
+          ))}
+        </DocOutcomes>
+      </DocFlowGrid>
+    </DocFlowFrame>
   </VisualWrapper>
 );
 
@@ -340,7 +482,6 @@ export const DataPipelinesVisual: React.FC<{ theme: StyledTheme }> = ({ theme })
         <Stat><StatValue theme={theme}>3</StatValue><StatLabel theme={theme}>active pipelines</StatLabel></Stat>
       </StatRow>
     </VisualFrame>
-    <VisualLabel theme={theme}>Pipeline activity</VisualLabel>
   </VisualWrapper>
 );
 
@@ -367,7 +508,6 @@ export const ApprovalsVisual: React.FC<{ theme: StyledTheme }> = ({ theme }) => 
         <Stat><StatValue theme={theme}>5</StatValue><StatLabel theme={theme}>waiting 48h+</StatLabel></Stat>
       </StatRow>
     </VisualFrame>
-    <VisualLabel theme={theme}>Approval trends</VisualLabel>
   </VisualWrapper>
 );
 
@@ -393,7 +533,6 @@ export const DeveloperVisual: React.FC<{ theme: StyledTheme }> = ({ theme }) => 
         <Stat><StatValue theme={theme}>3.2k</StatValue><StatLabel theme={theme}>API calls</StatLabel></Stat>
       </StatRow>
     </VisualFrame>
-    <VisualLabel theme={theme}>Developer activity</VisualLabel>
   </VisualWrapper>
 );
 
@@ -419,7 +558,6 @@ export const WorkflowStudioVisual: React.FC<{ theme: StyledTheme }> = ({ theme }
         <Stat><StatValue theme={theme}>94h</StatValue><StatLabel theme={theme}>est. saved</StatLabel></Stat>
       </StatRow>
     </VisualFrame>
-    <VisualLabel theme={theme}>Workflow impact</VisualLabel>
   </VisualWrapper>
 );
 
@@ -448,7 +586,6 @@ export const ObjectPermissionsVisual: React.FC<{ theme: StyledTheme }> = ({ them
         ))}
       </VisualList>
     </VisualFrame>
-    <VisualLabel theme={theme}>Permission profiles</VisualLabel>
   </VisualWrapper>
 );
 
@@ -481,7 +618,6 @@ export const ActivityLogVisual: React.FC<{ theme: StyledTheme }> = ({ theme }) =
         ))}
       </VisualList>
     </VisualFrame>
-    <VisualLabel theme={theme}>Activity log preview</VisualLabel>
   </VisualWrapper>
 );
 
@@ -514,7 +650,6 @@ export const FlowConfigVisual: React.FC<{ theme: StyledTheme }> = ({ theme }) =>
         ))}
       </VisualList>
     </VisualFrame>
-    <VisualLabel theme={theme}>Flow configuration</VisualLabel>
   </VisualWrapper>
 );
 
@@ -547,40 +682,215 @@ export const PermissionsVisual: React.FC<{ theme: StyledTheme }> = ({ theme }) =
         ))}
       </VisualList>
     </VisualFrame>
-    <VisualLabel theme={theme}>Permission profiles</VisualLabel>
   </VisualWrapper>
 );
 
 // ── Saved Supergroups — group inventory ──────────────────
 
-const SUPERGROUP_ROWS = [
-  { name: 'Engineering', criteria: 'Dept = Engineering', members: '64', apps: '8 apps' },
-  { name: 'US Full-Time', criteria: 'Country = US, Type = FT', members: '189', apps: '12 apps' },
-  { name: 'Managers', criteria: 'Is Manager = Yes', members: '31', apps: '5 apps' },
-  { name: 'Sales Team', criteria: 'Dept = Sales', members: '42', apps: '6 apps' },
-  { name: 'Remote Workers', criteria: 'Location = Remote', members: '78', apps: '4 apps' },
-  { name: 'New Hires (90d)', criteria: 'Start < 90 days', members: '14', apps: '3 apps' },
-  { name: 'Finance & Accounting', criteria: 'Dept in Finance, Acct', members: '18', apps: '4 apps' },
-  { name: 'Contractors', criteria: 'Type = Contractor', members: '23', apps: '2 apps' },
-  { name: 'HIPAA Access', criteria: 'Custom: HIPAA = Yes', members: '9', apps: '3 apps' },
-  { name: 'Executives', criteria: 'Level >= VP', members: '7', apps: '6 apps' },
-  { name: 'EU Employees', criteria: 'Country in EU', members: '34', apps: '5 apps' },
-  { name: 'On Leave', criteria: 'Status = Leave', members: '5', apps: '1 app' },
-];
+const OrgChartFrame = styled.div`
+  width: ${VISUAL_WIDTH}px;
+  height: 350px;
+  position: relative;
+  overflow: hidden;
+  background: ${({ theme }) => (theme as StyledTheme).colorSurfaceDim};
+  border: 6px solid ${({ theme }) => (theme as StyledTheme).colorSurfaceBright};
+  border-radius: ${FRAME_RADIUS};
+  outline: 1px solid ${({ theme }) => (theme as StyledTheme).colorOutlineVariant};
+  outline-offset: -1px;
+  padding: ${({ theme }) => (theme as StyledTheme).space400} ${({ theme }) => (theme as StyledTheme).space300};
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const OrgNode = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => (theme as StyledTheme).space200};
+  background: ${({ theme }) => (theme as StyledTheme).colorSurfaceBright};
+  border-radius: ${({ theme }) => (theme as StyledTheme).shapeCornerLg};
+  padding: ${({ theme }) => (theme as StyledTheme).space200} ${({ theme }) => (theme as StyledTheme).space300};
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  min-width: 130px;
+`;
+
+const OrgAvatar = styled.div<{ $bg: string }>`
+  width: 28px;
+  height: 28px;
+  border-radius: ${({ theme }) => (theme as StyledTheme).shapeCornerFull};
+  background: ${({ $bg }) => $bg};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+`;
+
+const OrgNodeText = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const OrgNodeName = styled.span`
+  ${({ theme }) => (theme as StyledTheme).typestyleV2LabelMedium};
+  color: ${({ theme }) => (theme as StyledTheme).colorOnSurface};
+`;
+
+const OrgNodeRole = styled.span`
+  ${({ theme }) => (theme as StyledTheme).typestyleV2BodySmall};
+  color: ${({ theme }) => (theme as StyledTheme).colorOnSurfaceVariant};
+`;
+
+const OrgNodeMeta = styled.span`
+  ${({ theme }) => (theme as StyledTheme).typestyleV2BodySmall};
+  color: ${({ theme }) => (theme as StyledTheme).colorOnSurfaceVariant};
+  display: flex;
+  align-items: center;
+  gap: 3px;
+`;
+
+const OrgExpandDot = styled.div`
+  width: 18px;
+  height: 18px;
+  border-radius: ${({ theme }) => (theme as StyledTheme).shapeCornerFull};
+  border: 1px solid ${({ theme }) => (theme as StyledTheme).colorOutlineVariant};
+  background: ${({ theme }) => (theme as StyledTheme).colorSurfaceBright};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  ${({ theme }) => (theme as StyledTheme).typestyleV2LabelSmall};
+  color: ${({ theme }) => (theme as StyledTheme).colorOnSurfaceVariant};
+  flex-shrink: 0;
+`;
+
+const OrgRow = styled.div`
+  display: flex;
+  align-items: flex-start;
+  gap: ${({ theme }) => (theme as StyledTheme).space300};
+  width: 100%;
+  justify-content: center;
+`;
+
+const OrgCol = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+`;
+
+const OrgConnectorV = styled.div`
+  width: 2px;
+  height: 14px;
+  background: ${({ theme }) => (theme as StyledTheme).colorOutlineVariant};
+`;
+
+const OrgConnectorRow = styled.div`
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: center;
+  position: relative;
+  height: 14px;
+`;
 
 export const SupergroupsVisual: React.FC<{ theme: StyledTheme }> = ({ theme }) => (
   <VisualWrapper theme={theme}>
-    <VisualFrame theme={theme}>
-      <VisualList theme={theme}>
-        {SUPERGROUP_ROWS.map((g) => (
-          <VisualRow key={g.name} theme={theme}>
-            <VisualRowName theme={theme}>{g.name}</VisualRowName>
-            <VisualRowMeta theme={theme}>{g.members} members · {g.apps}</VisualRowMeta>
-          </VisualRow>
-        ))}
-      </VisualList>
-    </VisualFrame>
-    <VisualLabel theme={theme}>Saved groups</VisualLabel>
+    <OrgChartFrame theme={theme}>
+      {/* Root node */}
+      <OrgCol theme={theme}>
+        <OrgNode theme={theme}>
+          <OrgAvatar theme={theme} $bg={theme.colorPrimaryContainer}>
+            <Icon type={Icon.TYPES.USERS_OUTLINE} size={14} color={theme.colorOnPrimaryContainer} />
+          </OrgAvatar>
+          <OrgNodeText>
+            <OrgNodeName theme={theme}>Kim Torres</OrgNodeName>
+            <OrgNodeRole theme={theme}>CEO</OrgNodeRole>
+          </OrgNodeText>
+          <OrgNodeMeta theme={theme}>
+            <Icon type={Icon.TYPES.USERS_OUTLINE} size={10} color={theme.colorOnSurfaceVariant} />
+            7 · 5,576
+          </OrgNodeMeta>
+        </OrgNode>
+        <OrgExpandDot theme={theme}>+</OrgExpandDot>
+        <OrgConnectorV theme={theme} />
+      </OrgCol>
+
+      {/* Horizontal connector */}
+      <OrgConnectorRow theme={theme}>
+        <svg width="240" height="14" viewBox="0 0 240 14" fill="none" style={{ position: 'absolute' }}>
+          <line x1="60" y1="0" x2="60" y2="14" stroke={theme.colorOutlineVariant} strokeWidth="2" />
+          <line x1="180" y1="0" x2="180" y2="14" stroke={theme.colorOutlineVariant} strokeWidth="2" />
+          <line x1="60" y1="0" x2="180" y2="0" stroke={theme.colorOutlineVariant} strokeWidth="2" />
+        </svg>
+      </OrgConnectorRow>
+
+      {/* Second level */}
+      <OrgRow theme={theme}>
+        <OrgCol theme={theme}>
+          <OrgNode theme={theme}>
+            <OrgAvatar theme={theme} $bg={theme.colorSurfaceContainerHigh}>
+              <Icon type={Icon.TYPES.USERS_OUTLINE} size={14} color={theme.colorOnSurfaceVariant} />
+            </OrgAvatar>
+            <OrgNodeText>
+              <OrgNodeName theme={theme}>Alex Chen</OrgNodeName>
+              <OrgNodeRole theme={theme}>COO</OrgNodeRole>
+            </OrgNodeText>
+            <OrgNodeMeta theme={theme}>
+              <Icon type={Icon.TYPES.USERS_OUTLINE} size={10} color={theme.colorOnSurfaceVariant} />
+              14 · 2,367
+            </OrgNodeMeta>
+          </OrgNode>
+          <OrgExpandDot theme={theme}>+</OrgExpandDot>
+          <OrgConnectorV theme={theme} />
+          <OrgNode theme={theme}>
+            <OrgAvatar theme={theme} $bg={theme.colorSurfaceContainerHigh}>
+              <Icon type={Icon.TYPES.USERS_OUTLINE} size={14} color={theme.colorOnSurfaceVariant} />
+            </OrgAvatar>
+            <OrgNodeText>
+              <OrgNodeName theme={theme}>Priya Patel</OrgNodeName>
+              <OrgNodeRole theme={theme}>Global Director</OrgNodeRole>
+            </OrgNodeText>
+            <OrgNodeMeta theme={theme}>
+              <Icon type={Icon.TYPES.USERS_OUTLINE} size={10} color={theme.colorOnSurfaceVariant} />
+              10 · 36
+            </OrgNodeMeta>
+          </OrgNode>
+          <OrgExpandDot theme={theme}>+</OrgExpandDot>
+        </OrgCol>
+
+        <OrgCol theme={theme}>
+          <OrgNode theme={theme}>
+            <OrgAvatar theme={theme} $bg={theme.colorSurfaceContainerHigh}>
+              <Icon type={Icon.TYPES.USERS_OUTLINE} size={14} color={theme.colorOnSurfaceVariant} />
+            </OrgAvatar>
+            <OrgNodeText>
+              <OrgNodeName theme={theme}>Sam Rivera</OrgNodeName>
+              <OrgNodeRole theme={theme}>CFO</OrgNodeRole>
+            </OrgNodeText>
+            <OrgNodeMeta theme={theme}>
+              <Icon type={Icon.TYPES.USERS_OUTLINE} size={10} color={theme.colorOnSurfaceVariant} />
+              9 · 189
+            </OrgNodeMeta>
+          </OrgNode>
+          <OrgExpandDot theme={theme}>+</OrgExpandDot>
+          <OrgConnectorV theme={theme} />
+          <OrgNode theme={theme}>
+            <OrgAvatar theme={theme} $bg={theme.colorSurfaceContainerHigh}>
+              <Icon type={Icon.TYPES.USERS_OUTLINE} size={14} color={theme.colorOnSurfaceVariant} />
+            </OrgAvatar>
+            <OrgNodeText>
+              <OrgNodeName theme={theme}>Jordan Lee</OrgNodeName>
+              <OrgNodeRole theme={theme}>General Counsel</OrgNodeRole>
+            </OrgNodeText>
+            <OrgNodeMeta theme={theme}>
+              <Icon type={Icon.TYPES.USERS_OUTLINE} size={10} color={theme.colorOnSurfaceVariant} />
+              10 · 36
+            </OrgNodeMeta>
+          </OrgNode>
+          <OrgExpandDot theme={theme}>+</OrgExpandDot>
+        </OrgCol>
+      </OrgRow>
+    </OrgChartFrame>
   </VisualWrapper>
 );
 
@@ -613,7 +923,6 @@ export const ChatVisual: React.FC<{ theme: StyledTheme }> = ({ theme }) => (
         ))}
       </VisualList>
     </VisualFrame>
-    <VisualLabel theme={theme}>Chat channels</VisualLabel>
   </VisualWrapper>
 );
 
@@ -708,17 +1017,17 @@ export const PRIMER_PAGE_CONFIGS: Record<string, PrimerPageConfig> = {
       category: 'The catalog powers your entire data stack',
       categorySubtitle: 'From ad-hoc reports to warehouse syncs—everything starts with understanding your data.',
       items: [
-        { id: 'reports', icon: Icon.TYPES.REPORT_FILLED, title: 'Reports', description: 'Build dashboards and scheduled reports from every object. Filter, join, and export with confidence.', primaryAction: { label: 'Create report', onClick: () => {} } },
-        { id: 'pipelines', icon: Icon.TYPES.LINK_HORIZONTAL, title: 'Data pipelines', description: 'Sync to Snowflake, BigQuery, or your data warehouse. Know exactly which fields map where.', primaryAction: { label: 'Set up pipeline', onClick: () => {} } },
-        { id: 'permissions', icon: Icon.TYPES.SHIELD_FILLED, title: 'Data permissions', description: 'Control who sees sensitive fields. Field-level access keeps PII and financial data protected.', primaryAction: { label: 'Manage permissions', onClick: () => {} } },
+        { id: 'reports', icon: Icon.TYPES.REPORT_FILLED, title: 'Reports', description: 'Build dashboards and scheduled reports from every object. Filter, join, and export with confidence.', primaryAction: { label: 'View reports', onClick: () => {} } },
+        { id: 'workflows', icon: Icon.TYPES.REPORT_CHECKLIST_FILLED, title: 'Workflows', description: 'Trigger automations from data changes — route approvals, provision access, and notify stakeholders.', primaryAction: { label: 'View workflows', onClick: () => {} } },
+        { id: 'activity-log', icon: Icon.TYPES.AUDIT_OBSERVATION_OUTLINE, title: 'Activity Log', description: 'See exactly what changed, when, and who did it — a full audit trail across every object.', primaryAction: { label: 'View activity', onClick: () => {} } },
       ],
     },
   },
 
   // ─── Documents ──────────────────────────────────────────
   'documents': {
-    heroTitle: 'Manage employee documents and acknowledgments',
-    heroSubtitle: 'Send policies, collect signatures, automate onboarding packets, and track compliance—all in one place.',
+    heroTitle: 'Manage documents and signatures',
+    heroSubtitle: 'Send documents, collect and track signatures, automate distribution, and track compliance — all in one place.',
     heroCta: 'Open Documents',
     fullPage: true,
     fullPageTitle: 'Documents',
@@ -733,12 +1042,12 @@ export const PRIMER_PAGE_CONFIGS: Record<string, PrimerPageConfig> = {
       ],
     },
     capability: {
-      separatorLabel: 'How documents work?',
+      separatorLabel: 'How documents work',
       features: [
-        { icon: Icon.TYPES.SIGNATURE_OUTLINE, title: 'Send & collect signatures', description: 'Send any document for e-signature. Track who\'s opened, signed, or pending.', benefits: ['Legally binding e-signatures', 'Track completion status', 'Resend easily'], ctaLabel: 'Send a document' },
+        { icon: Icon.TYPES.SIGNATURE_OUTLINE, title: 'Send and collect signatures', description: 'Send any document for e-signature. Track who has opened, signed, or not yet signed.', benefits: ['Legally binding e-signatures', 'Track completion status', 'Resend easily'], ctaLabel: 'Send a document' },
         { icon: Icon.TYPES.DOCUMENT_OUTLINE, title: 'Create templates', description: 'Build reusable templates for policies, agreements, and onboarding forms.', benefits: ['Reuse across employees', 'Merge fields from HR data', 'Version control'], ctaLabel: 'Create template' },
-        { icon: Icon.TYPES.PROVISION_USERS_ONBOARD_OUTLINE, title: 'Automate onboarding', description: 'Bundle documents into packets that trigger automatically when someone is hired.', benefits: ['Trigger on hire date', 'Pre-fill from profile', 'Reduce manual follow-up'], ctaLabel: 'Set up packet' },
-        { icon: Icon.TYPES.SEARCH_OUTLINE, title: 'Track compliance', description: 'Monitor completion across your org. Export audit trails for compliance reviews.', benefits: ['Audit trail for signatures', 'Expiration alerts', 'Compliance reports'], ctaLabel: 'View compliance' },
+        { icon: Icon.TYPES.PROVISION_USERS_ONBOARD_OUTLINE, title: 'Automate onboarding', description: 'Bundle documents into packets that trigger automatically when you hire a worker.', benefits: ['Trigger on hire date', 'Pre-fill from profile', 'Reduce manual follow-up'], ctaLabel: 'Set up packet' },
+        { icon: Icon.TYPES.SEARCH_OUTLINE, title: 'Track compliance', description: 'Monitor completion across your org and export audit trails for compliance.', benefits: ['Audit trail for signatures', 'Expiration alerts', 'Compliance reports'], ctaLabel: 'View compliance' },
       ],
     },
     unlock: {

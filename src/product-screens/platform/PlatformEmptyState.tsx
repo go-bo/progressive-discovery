@@ -65,7 +65,7 @@ const PAGE_TABS: Record<string, string[]> = {
   'inbox': ['Pending', 'Resolved'],
   'recipes': ['All', 'Active', 'Drafts'],
   'workflow-studio': ['Dashboard', 'Analytics', 'Tags'],
-  'organizational-data': ['Company information', 'Organizational Structure', 'Job information', 'Employee lifecycle'],
+  'organizational-data': ['Company information', 'Departments', 'Job information', 'Employee lifecycle'],
   'notification-center': ['Alerts'],
   'activity-log': ['All events', 'Logins', 'Changes', 'Alerts'],
   'data-permissions': ['Permission overview', 'Feature access', 'Users overview', 'Admins to migrate'],
@@ -485,7 +485,7 @@ const ViewAllLink = styled.button`
 const DOCUMENTS_FEATURES: FeatureCardDetailConfig[] = [
   {
     icon: Icon.TYPES.SIGNATURE_OUTLINE,
-    title: 'Send & Collect Signatures',
+    title: 'Send and Collect Signatures',
     description: 'Send documents for e-signature.',
     modalDescription: 'Send documents for e-signature and track completion across your workforce. Recipients receive a secure link to review and sign—no printing or scanning required. You\'ll get notified when documents are complete, and you can resend reminders or new copies at any time.',
     benefits: ['Legally binding e-signatures', 'Track completion status', 'Resend easily'],
@@ -700,8 +700,8 @@ export const PlatformEmptyState: React.FC<PlatformEmptyStateProps> = ({ pageId, 
           <PageHeroBanner
             layout="side-by-side"
             titleSize="title"
-            title="Manage employee documents and acknowledgments"
-            subtitle="Send policies, collect signatures, automate onboarding packets, and track compliance—all in one place."
+            title="Manage documents and signatures"
+            subtitle="Send documents, collect and track signatures, automate distribution, and track compliance — all in one place."
             primaryAction={{ label: 'Send your first document', onClick: handleCta }}
             visual={
               <DocumentsFlowVisual theme={theme}>
