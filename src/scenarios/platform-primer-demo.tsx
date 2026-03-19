@@ -43,24 +43,35 @@ const PLATFORM_PRIMER_PAGES = new Set([
   'data-overview',
   'tools-overview',
   'company-settings-overview',
+  'departments',
   ...Object.keys(PLATFORM_PAGES),
 ]);
 
 const DEFAULT_PAGE = 'data-catalog';
 
+const ORG_DATA_TAB_ALIASES: Record<string, number> = {
+  'departments': 1,
+};
+
 const PlatformPrimerDemo: React.FC = () => {
   const { page } = useParams<{ page?: string }>();
   const navigate = useNavigate();
-  const [activePage, setActivePageState] = useState(() =>
-    page && PLATFORM_PRIMER_PAGES.has(page) ? page : DEFAULT_PAGE,
+  const [activePage, setActivePageState] = useState(() => {
+    if (page && page in ORG_DATA_TAB_ALIASES) return 'organizational-data';
+    return page && PLATFORM_PRIMER_PAGES.has(page) ? page : DEFAULT_PAGE;
+  });
+  const [organizationalDataTabIndex, setOrganizationalDataTabIndex] = useState(() =>
+    page && page in ORG_DATA_TAB_ALIASES ? ORG_DATA_TAB_ALIASES[page] : 0,
   );
-  const [organizationalDataTabIndex, setOrganizationalDataTabIndex] = useState(0);
   const [reportsTabIndex, setReportsTabIndex] = useState(0);
   const { lifecyclePhase, setLifecyclePhase } = useUserState();
 
   useEffect(() => {
     if (!page || page === '') {
       setActivePageState(DEFAULT_PAGE);
+    } else if (page in ORG_DATA_TAB_ALIASES) {
+      setActivePageState('organizational-data');
+      setOrganizationalDataTabIndex(ORG_DATA_TAB_ALIASES[page]);
     } else if (PLATFORM_PRIMER_PAGES.has(page) && page !== activePage) {
       setActivePageState(page);
     }
